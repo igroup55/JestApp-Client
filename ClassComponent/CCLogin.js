@@ -49,7 +49,7 @@ export default class CCLogin extends Component {
                     secureTextEntry={true}
                     onChangeText={this.handlePassword} />
 
-                <TouchableOpacity onPress={() => { this.props.navigation.navigate('NewDelivery'); }} style={styles.submitButton}>
+                <TouchableOpacity onPress={() => { this.props.navigation.navigate('Home'); }} style={styles.submitButton}>
                     <Text style={styles.submitButtonText}> Sign In </Text>
                 </TouchableOpacity>
                 <View style={{ flexDirection: 'row-reverse' }}>

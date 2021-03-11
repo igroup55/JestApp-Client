@@ -4,6 +4,7 @@ import {Container, Header, Content, Form, Item, Input, Label, Picker, Footer, Ri
 
 
 const CheckBoxes = () => {
+  
   const [isSelected, setSelection] = useState(false);
 
   return (
@@ -16,40 +17,81 @@ const CheckBoxes = () => {
           onValueChange={setSelection}
       
         />
+    
       </View>
-      {/* <Text>Is CheckBox selected: {isSelected ? "👍" : "👎"}</Text> */}
+      
+      <Text>
+        {isSelected ? ( <View  style={styles.section }>
+              <Icon name="person" style={{ alignSelf: 'center', marginTop: 10 }} />
+                <Text style={styles.titles}> פרטי לקוח קצה </Text>
+
+
+
+                <View  >
+
+                <Item floatingLabel style={styles.InputText}>    
+                <Label>שם מלא</Label>      
+                  <Input style={{width:100, alignContent:'center'}}/>
+                </Item>
+
+                <Item floatingLabel style={styles.InputText}>
+                <Label>כתובת</Label>
+                  <Input style={{width:100, alignContent:'center'}}/>
+                </Item>
+                
+                <Item floatingLabel style={styles.InputText}>
+                <Label>טלפון</Label>
+                  <Input style={{width:100, alignContent:'center'}}/>
+                </Item>
+        
+
+                </View>
+
+                </View>) : null}</Text>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+ const styles = StyleSheet.create({
+   container: {
+     flex: 1,
+     alignItems: "center",
+     justifyContent: "center",
+   },
+   checkboxContainer: {
+     flexDirection: "row",
+     marginBottom: 20,
+   },
+   checkbox: {
+     alignSelf: "center",
+   },
+   label: {
+     margin: 8,
+   },
+   section: {
+     marginTop: 15,
+     marginBottom: 5,
+  
+     
+   },
+   titles: {
+     textAlign: 'center',
+     fontWeight: 'bold',
+ marginBottom: 5,
+ marginTop:5,
+     alignItems: 'center'
+   },
+   InputText: {
+    textAlign: 'right',
+    borderColor: 'green',
+    borderStyle: 'solid',
+    backgroundColor: '#cbe8ba',
+    borderRadius: 10,
+    marginRight: 10,
+    marginLeft: 10,
+    alignSelf:'center',
+    width:365
   },
-  checkboxContainer: {
-    flexDirection: "row",
-    marginBottom: 20,
-  },
-  checkbox: {
-    alignSelf: "center",
-  },
-  label: {
-    margin: 8,
-  },
-  section: {
-    marginTop: 15,
-    marginBottom: 5,
-    alignSelf:'center'
-  },
-  titles: {
-    textAlign: 'center',
-    fontWeight: 'bold',
-marginBottom: 5,
-marginTop:5,
-    alignItems: 'center'
-  }
-});
+ });
 
 export default CheckBoxes;

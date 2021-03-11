@@ -18,11 +18,28 @@ export default class CCSenderForm extends Component {
   }
 
 async componentDidMount () {
-  const apiStationsUrl ='http://localhost:51585/api/Stations';
-  const response = await fetch(apiStationsUrl);
-  const data = await response.json();
-  this.setState({StationsList:data,})
-  console.log(data);
+
+
+  //  fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Stations',{
+  //     method: 'GET',
+  //      headers: {
+  //           Accept: 'application/json, text/json, charset=UTF-8',
+  //           'Content-Type': 'application/json, text/json'
+  //     }
+  //    })
+  //    .then(response => response.json())
+  //   .then(data => {
+  //     console.log(data);
+  //   })
+  //    .catch(err => console.error(err));
+
+
+
+   const apiStationsUrl ='http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Stations';
+   const response = await fetch(apiStationsUrl);
+   const data = await response.json()
+   this.setState({StationsList:data,})
+   console.log(data);
 
 };
   onValueChange1 = (value) => {
@@ -41,42 +58,70 @@ async componentDidMount () {
     });
   }
 
- 
-   addIng = () => {
+
+   addPack = () => {
+
+
     
-console.log('adding')
-    alert('in addIng');
     const package_data = {
 
       StartStation: this.state.selected1,
       EndStation: this.state.selected2,
       Pweight: this.state.selected3,
+      
 
     }
 
- console.log(package_data)
-    const url = `http://localhost:51585/api/Packages`;
-    fetch(url, {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
-      mode: 'cors', // no-cors, *cors, same-origin
-      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: 'same-origin', // include, *same-origin, omit
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8'
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
+    fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages', {
+      method: 'POST',
+      body: JSON.stringify(package_data),
+      headers: new Headers({
+      'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+      })
+      })
+      .then(res => {
+      console.log('res=', res);
+      return res.json()
+      })
+      .then(
+      (result) => {
+      console.log("fetch POST= ", result);
       
-      redirect: 'follow', // manual, *follow, error
-      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify(package_data) // body data type must match "Content-Type" header
-    }).then(response =>
-      console.log(response.json())
-    );
+      },
+      (error) => {
+      console.log("err post=", error);
+      });
+      
+//  console.log(package_data)
+//     const url = `http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages`;
+//     fetch(url, {
+//       method: 'POST', // *GET, POST, PUT, DELETE, etc.
+//       mode: 'cors', // no-cors, *cors, same-origin
+//       cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+//       credentials: 'same-origin', // include, *same-origin, omit
+//       headers: new Headers({
+//         'Content-Type': 'application/json; text/json; application/x-www-form-urlencoded  ;  charset=UTF-8'
+        
+//         // 'Content-Type': 'application/x-www-form-urlencoded',
+//       }),
+//       Accept: 'application/json ',
+
+//       redirect: 'follow', // manual, *follow, error
+//       referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+//       body: package_data // body data type must match "Content-Type" header
+//     }).then(response => response.json())
+//     .then(data => {
+//       console.log(data)
+//     });
+    this.props.navigation.navigate('CCLockers'); 
+    
   }
 
   render() {
 
-
+    let stations= this.state.StationsList.map((stations,key)=>{
+      return (<Picker.Item key={key} label={stations.StationName} value={stations.StationName} />)});
+    
     return (
       <SafeAreaView>
         <ScrollView>
@@ -91,20 +136,22 @@ console.log('adding')
                 <Item picker style={styles.InputText}>
                   <Picker
                     mode="dropdown"
-                    style={{ width: undefined, textAlign: 'right' }}
+                    style={{  textAlign: 'right' }}
                     placeholder="בחר תחנת מוצא"
                     placeholderStyle={{ color: "#bfc6ea" }}
                     placeholderIconColor="#007aff"
                     selectedValue={this.state.selected1}
                     onValueChange={this.onValueChange1.bind(this)}
                   >
-
-                    <Picker.Item label=" בחר תחנת מוצא " value="key0" />
-                    <Picker.Item label="חיפה - בת גלים" value="key0" />
-                    <Picker.Item label="חיפה - מרכז השמונה" value="key1" />
+           
+           <Picker.Item label='בחר תחנת מוצא' value='None' /> 
+    
+         {stations}
+            
+                   {/* <Picker.Item label="חיפה - מרכז השמונה" value="key1" />
                     <Picker.Item label="תל אביב - סבידור" value="תל אביב - סבידור" />
                     <Picker.Item label="תל אביב - האוניברסיטה" value="key3" />
-                    <Picker.Item label=" תל אביב - השלום" value="key4" />
+                   <Picker.Item label=" תל אביב - השלום" value="key4" />  */}
                   </Picker>
                 </Item>
               </View>
@@ -123,11 +170,7 @@ console.log('adding')
                     onValueChange={this.onValueChange2.bind(this)}
                   >
                     <Picker.Item label="בחר תחנת יעד" value="key0" />
-                    <Picker.Item label="חיפה - בת גלים" value="key0" />
-                    <Picker.Item label="חיפה - מרכז השמונה" value="key1" />
-                    <Picker.Item label="תל אביב - סבידור" value="key2" />
-                    <Picker.Item label="תל אביב - האוניברסיטה" value="key3" />
-                    <Picker.Item label=" תל אביב - השלום" value="key4" />
+                    {stations}
                   </Picker>
                 </Item>
               </View>
@@ -148,26 +191,26 @@ console.log('adding')
                     selectedValue={this.state.selected3}
                     onValueChange={this.onValueChange3.bind(this)}
                   >
-
-                    <Picker.Item label=" מ 0 עד 3 קג " value="key0" />
-                    <Picker.Item label=" מ 3 עד 6 קג" value="3.6" />
-                    <Picker.Item label="מ 6 עד 10 קג" value="key2" />
+                    <Picker.Item label=" בחר משקל חבילה" value="None" />
+                    <Picker.Item label=" מ 0 עד 3 קג " value="3" />
+                    <Picker.Item label=" מ 3 עד 6 קג" value="6" />
+                    <Picker.Item label="מ 6 עד 10 קג" value="10" />
                   </Picker>
                 </Item>
               </View>
 
 
-             
-              <View  style={styles.section}>
+
+              {/* <View  style={styles.section}>
               <Icon name="person" style={{ alignSelf: 'center', marginTop: 10 }} />
                 <Text style={styles.titles}> פרטי לקוח קצה </Text>
                 <Item floatingLabel style={styles.InputText}>
                   <Label ></Label>
                   <Input />
-                </Item></View>
+                </Item></View> */}
 
 
-              <Button onPress={() => { this.addIng() }} style={{ alignSelf: 'center', backgroundColor: 'green', marginTop: 70, borderRadius: 10, borderWidth: 1, borderColor: 'black' }}><Text style={{ fontWeight: 'bold' }}>  צור כרטיס משלוח  </Text></Button>
+              <Button onPress={() => { this.addPack() }} style={{ alignSelf: 'center', backgroundColor: 'green', marginTop: 70, borderRadius: 10, borderWidth: 1, borderColor: 'black' }}><Text style={{ fontWeight: 'bold' }}>  צור כרטיס משלוח  </Text></Button>
             </Form>
 
 
