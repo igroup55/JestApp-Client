@@ -12,10 +12,7 @@ import CCRegister from './ClassComponent/CCRegister';
 import CCHome from './ClassComponent/CCHome';
 import HomeActivityList from './ClassComponent/HomeActivityList';
 import CCLockers from './ClassComponent/CCLockers';
-<<<<<<< Updated upstream
 import CCDeliveryExpressFeed from './ClassComponent/CCDeliveryExpressFeed';
-=======
->>>>>>> Stashed changes
 import CCTrainRouteSelection from './ClassComponent/CCTrainRouteSelection';
 import CCExpressRouteSelection from './ClassComponent/CCExpressRouteSelection';
 
