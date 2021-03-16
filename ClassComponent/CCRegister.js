@@ -37,38 +37,112 @@ export default class RegisterForm extends Component {
   }
   AddUser = () => {
 
-    alert('in addPackage');
+    alert('in AddUser');
     const User = {
-
-    fullName: this.state.fullName,
-    email: this.state.email,
+    Fullname: this.state.fullName,
+    EmailAddress: this.state.email,
     password: this.state.password,
-    phone_number:this.state.phone_number,
-    ID: this.state.ID,
+    PhoneNum:this.state.phone_number,
+    UserId: this.state.ID,
     ProfilePic: this.state.ProfilePic,
     }
-    console.log(Package.fullName);
-    console.log(Package.email);
-    console.log(Package.phone_number);
-    const url = `http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Users`;
-    fetch(url, {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
-      mode: 'cors', // no-cors, *cors, same-origin
-      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: 'same-origin', // include, *same-origin, omit
-      headers: {
-        'Content-Type': 'application/json'
-        // 'Content-Type': 'application/x-www-form-urlencoded',
+    console.log(User.fullName);
+    console.log(User.email);
+    console.log(User.phone_number);
+    fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Users', {
+      method: 'POST',
+      body: JSON.stringify(User),
+      headers: new Headers({
+      'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+      })
+      })
+      .then(res => {
+      console.log('res=', res);
+      return res.json()
+      })
+      .then(
+      (result) => {
+      console.log("fetch POST= ", result);
+      
       },
-      redirect: 'follow', // manual, *follow, error
-      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify(User) // body data type must match "Content-Type" header
-    }).then(response =>
-      console.log(response.json())
-    );
+      (error) => {
+      console.log("err post=", error);
+      });
+    ////
+    // const url = `http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Users`;
+    // fetch(url, {
+    //   method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    //   mode: 'cors', // no-cors, *cors, same-origin
+    //   cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    //   credentials: 'same-origin', // include, *same-origin, omit
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //     // 'Content-Type': 'application/x-www-form-urlencoded',
+    //   },
+    //   redirect: 'follow', // manual, *follow, error
+    //   referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    //   body: JSON.stringify(User) // body data type must match "Content-Type" header
+    // }).then(response =>
+    //   console.log(response.json())
+    // );
   }
     onChangeText = (key, val) => {
         this.setState({ [key]: val })
+      }
+      validateName(){
+        let rjx=/^[a-zA-Z]+$/;
+        let isNameValid= rjx.test(this.state.fullName);
+        console.warn(isNameValid);
+        if(!isNameValid){
+          this.setState({fullName_Error:"Name should be letters from a-z or A-Z"});
+        }
+        else{
+          this.setState({fullName_Error:""})
+        }
+      }
+      validateEmail(){
+        let rjx=/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$/;
+        let isEmailValid= rjx.test(this.state.email);
+        console.warn(isEmailValid);
+        if(!isEmailValid){
+          this.setState({email_Error:"Format should be text@domain.com"});
+        }
+        else{
+          this.setState({email_Error:""})
+        }
+      }
+      validatePassword(){
+        let rjx=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}/;
+        let isPasswordValid= rjx.test(this.state.password);
+        console.warn(isPasswordValid);
+        if(!isPasswordValid){
+          this.setState({password_Error:"Password must be contain Minimum eight characters, at least one uppercase letter and at least one number"});
+        }
+        else{
+          this.setState({password_Error:""})
+        }
+      }
+      validatePhone(){
+        let rjx=/[0-9]{10}/;
+        let isPhoneValid= rjx.test(this.state.phone_number);
+        console.warn(isPhoneValid);
+        if(!isPhoneValid){
+          this.setState({phone_number_Error:"phone number is 10 digits"});
+        }
+        else{
+          this.setState({phone_number_Error:""})
+        }
+      }
+      validateID(){
+        let rjx=/[0-9]{9}/;
+        let isIDValid= rjx.test(this.state.ID);
+        console.warn(isIDValid);
+        if(!isIDValid){
+          this.setState({ID_Error:"phone number is 9 digits"});
+        }
+        else{
+          this.setState({ID_Error:""})
+        }
       }
       validate =()=>{
         let fullName_Error= "";
@@ -77,24 +151,11 @@ export default class RegisterForm extends Component {
         let phone_number_Error= "";
         let ID_Error="";
         let ProfilePic_Error="";
-        if(!this.state.email_Error.includes('@')){
-          email_Error ='אימייל לא תקין';
-        }
-        if(this.state.ID_Error.length <9 ){
-          ID_Error ='מספר ת.ז או ח"פ לא תקין';
-        }
-        if(!this.state.phone_number_Error.length === 10 ){
-          phone_number_Error ="מספר טלפון לא תקין";
-        }
-        if(this.state.password_Error.includes('@','+','-','=')){
-          password_Error ='סיסמה לא תקינה';
-        }
-        if(this.state.fullName_Error===""){
-          fullName_Error ='אנא הכנס שם מלא';
-        }
-        if(this.state.ProfilePic_Error===""){
-          fullName_Error =' אנא בחר תמונת פרופיל';
-        }
+        this.validateName();
+        this.validateEmail();
+        this.validatePassword();
+        this.validatePhone();
+        this.validateID();
         if(ID_Error){
           this.setState({ID_Error});
           return false;
@@ -122,14 +183,20 @@ export default class RegisterForm extends Component {
         return true;
       }
       signUp = async () => {
-        const { fullName, password, email, phone_number ,ID , ProfilePic} = this.state
+        const user={ Fullname:this.state.fullName,Password:this.state.password,EmailAddress:this.state.email,PhoneNum:this.state.phone_number ,UserId:this.state.ID , ProfilePic:this.state.ProfilePic} 
         try {
           // here place your signup logic
           const isValid= this.validate();
-          alert(JSON.stringify(this.state));
+          if(isValid===true){
+              this.AddUser();
+              alert(JSON.stringify(user));
+              this.props.navigation.navigate('Login');
+
           // console.log('user successfully signed up!: ', success)
+          }
+        
         } catch (err) {
-          console.log('error signing up: ', err)
+          console.log('error signing up:', err)
         }
       { this.props.navigation.navigate('Register'); }
       }
@@ -144,23 +211,17 @@ export default class RegisterForm extends Component {
         };
         
     render() {
-        return (
+        return (<ScrollView>
          <View>
            <SafeAreaView>
-         <Header
-  leftComponent={{ icon: 'menu', color: '#A7D489' }}
-  centerComponent={{ text: 'הרשמה', style: { color: '#fff' } }}
-  rightComponent={{ icon: 'home', color: '#fff' }}
-/></SafeAreaView>
+         </SafeAreaView>
         <View>
     <Text style={{textAlign:'center',fontSize:30}}>ברוך הבא ל JESTAPP</Text>
     <Image
       source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQl97_NDIiRpKTDKaKSDtnGPZbLMRl-A8EWIw&usqp=CAU' }}
       style={{ width: 100, height: 100, justifyContent: 'center',alignItems:'center',marginLeft:140 }}
-    /></View>
-
-<ScrollView>
-            
+    />
+    </View>
             <View>
                 <View style={styles.container}>
         <TextInput
@@ -191,6 +252,8 @@ export default class RegisterForm extends Component {
         <TextInput
           style={styles.input}
           placeholder='מספר טלפון'
+          keyboardType="numeric"
+          maxLength={10}
           autoCapitalize="none"
           placeholderTextColor='white'
           onChangeText={val => this.onChangeText('phone_number', val)}
@@ -199,6 +262,8 @@ export default class RegisterForm extends Component {
          <TextInput
           style={styles.input}
           placeholder='ת.ז/ ח.פ'
+          maxLength={9}
+          keyboardType="numeric"
           autoCapitalize="none"
           placeholderTextColor='white'
           onChangeText={val => {this.onChangeText('ID', val); this.setState({ID_Error:''})}}
@@ -219,9 +284,9 @@ export default class RegisterForm extends Component {
         />
       </View>
             </View>
-            </ScrollView>
+            
          </View>
-           
+           </ScrollView>
            
         )
     }

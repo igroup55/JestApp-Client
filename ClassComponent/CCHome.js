@@ -16,8 +16,7 @@ export default class Home extends Component {
 
   render() {
     return (
-       <SafeAreaView> 
-         <ScrollView>
+        
       <View>
         
           <View>
@@ -30,8 +29,8 @@ export default class Home extends Component {
       </View>
       <View style={{height:400}}>
         
-       
           <HomeActivityList/>
+         
        <Text>____________________________________________________________</Text>
         <Text style={{textAlign:'center',fontSize:20,backgroundColor:'#A7D489',padding:20,borderStyle:'solid',borderWidth:2,borderColor:'black',}}>מה הג'סטה הבאה שלך?</Text>
 
@@ -41,7 +40,8 @@ export default class Home extends Component {
     <View>
     <Button style={{width:50,justifyContent:'center',alignItems:'center'}}
           title='שליח רכבת'
-        
+          onPress={() => { this.props.navigation.navigate('New Train Route');}}
+
           
           
         />
@@ -54,7 +54,8 @@ export default class Home extends Component {
         <Text></Text>
          <Button
           title='שליח אקספרס'
-          onPress={()=>{console.log("in express delivery method" );}}
+          onPress={() => { this.props.navigation.navigate('New Express Route');}}
+
           
         />
         
@@ -64,8 +65,8 @@ export default class Home extends Component {
       style={{  width:400,height:300, justifyContent:'center',alignItems:'center',}}
     />
       </View>
-      </ScrollView>
-      </SafeAreaView>
+
+    
     );
   }
 }

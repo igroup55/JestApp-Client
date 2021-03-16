@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import {StyleSheet} from 'react-native'
 import { Container, Header, Content, List, ListItem, Left, Body, Right, Thumbnail, Text } from 'native-base';
 import { TouchableOpacity } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 export default class HomeActivityList extends Component {
   render() {
     return (
+      <ScrollView>
       <Container style={styles.LastOperations}>
         <Header />
         <Content>
-          <List style={{maxHeight:250,}}>
-            {}
+          <List >
+            
             <TouchableOpacity>
             <ListItem avatar style={{borderBottomColor:'black'}}>
               <Right>
@@ -57,6 +59,7 @@ export default class HomeActivityList extends Component {
           </List>
         </Content>
       </Container>
+      </ScrollView>
     );
   }
 }
@@ -65,7 +68,7 @@ const styles = StyleSheet.create({
       flex: 1,
     },
     LastOperations:{
-      maxHeight:300,
+     
     }
   });
   const operation ={
