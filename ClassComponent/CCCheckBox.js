@@ -22,27 +22,23 @@ const CheckBoxes = () => {
       
       <Text>
         {isSelected ? ( <View  style={styles.section }>
-              <Icon name="person" style={{ alignSelf: 'center', marginTop: 10 }} />
-                <Text style={styles.titles}> פרטי לקוח קצה </Text>
-
-
+              
 
                 <View  >
 
-                <Item floatingLabel style={styles.InputText}>    
-                <Label>שם מלא</Label>      
-                  <Input style={{width:100, alignContent:'center'}}/>
-                </Item>
-
-                <Item floatingLabel style={styles.InputText}>
+               
+                <Item>
                 <Label>כתובת</Label>
-                  <Input style={{width:100, alignContent:'center'}}/>
-                </Item>
+          <Input style={styles.InputText}
+             placeholderTextColor="grey"
+             placeholder="כתובת"
+            returnKeyType="search"
+          
+            
+          />
+        </Item>
+               
                 
-                <Item floatingLabel style={styles.InputText}>
-                <Label>טלפון</Label>
-                  <Input style={{width:100, alignContent:'center'}}/>
-                </Item>
         
 
                 </View>

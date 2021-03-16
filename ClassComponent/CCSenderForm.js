@@ -1,6 +1,6 @@
 import React, { Component, useState } from 'react';
 import { CheckBox, Container, Header, Content, Form, Item, Input, Label, Picker, Footer, Right, Button, Icon } from 'native-base';
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, TextInput, Text , View } from 'react-native';
 import CheckBoxes from './CCCheckBox';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import ReactDOM from "react-dom";
@@ -12,41 +12,44 @@ export default class CCSenderForm extends Component {
       selected1: null,
       selected2: null,
       selected3: null,
-      StationsList : []
+      StationsList : [],
+      CustPNum : ' ',
+      CustName :' '
     };
 
   }
 
-async componentDidMount () {
+ async componentDidMount () {
+//  fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Stations',{
+//       method: 'GET',
+//         headers: {
+//              Accept: 'application/json, text/json, charset=UTF-8',
+//              'Content-Type': 'application/json, text/json'
+//        }
+//       })
+//       .then(response => response.json())
+//      .then(data => {
+//        this.setState({StationsList:data});
+//      })
+//      .catch(err => console.error(err));
+
+     const apiStationsUrl ='http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Stations';
+     const response = await fetch(apiStationsUrl);
+     const data = await response.json()
+     console.log(data)
+     this.setState({StationsList:data})
 
 
-  //  fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Stations',{
-  //     method: 'GET',
-  //      headers: {
-  //           Accept: 'application/json, text/json, charset=UTF-8',
-  //           'Content-Type': 'application/json, text/json'
-  //     }
-  //    })
-  //    .then(response => response.json())
-  //   .then(data => {
-  //     console.log(data);
-  //   })
-  //    .catch(err => console.error(err));
-
-
-
-   const apiStationsUrl ='http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Stations';
-   const response = await fetch(apiStationsUrl);
-   const data = await response.json()
-   this.setState({StationsList:data,})
-   console.log(data);
-
+    
 };
+
   onValueChange1 = (value) => {
     this.setState({
       selected1: value
     });
+    console.log(this.state.selected1)
   }
+  
   onValueChange2 = (value) => {
     this.setState({
       selected2: value
@@ -57,7 +60,30 @@ async componentDidMount () {
       selected3: value
     });
   }
+  onChangeText = (key, value) => {
+    this.setState({ [key]: value })
+  
+  }
 
+  AddCust = () => {
+    
+    const customer_data = {
+
+      FullName : this.state.CustName,
+      PhoneNum : this.state.CustPNum
+ 
+     }
+
+     fetch('http://proj.ruppin.ac.il/igrop55/test2/tar1/api/Cstomers', {
+      method: 'POST',
+      body: JSON.stringify(customer_data),
+      headers: new Headers({
+      'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+      })
+      })
+
+
+  }
 
    addPack = () => {
 
@@ -68,9 +94,10 @@ async componentDidMount () {
       StartStation: this.state.selected1,
       EndStation: this.state.selected2,
       Pweight: this.state.selected3,
-      
 
     }
+
+    
 
     fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages', {
       method: 'POST',
@@ -79,18 +106,15 @@ async componentDidMount () {
       'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
       })
       })
-      .then(res => {
-      console.log('res=', res);
-      return res.json()
-      })
-      .then(
-      (result) => {
-      console.log("fetch POST= ", result);
-      
-      },
-      (error) => {
-      console.log("err post=", error);
-      });
+
+      {this.AddCust()}
+
+    
+
+    
+
+   
+  
       
 //  console.log(package_data)
 //     const url = `http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages`;
@@ -113,14 +137,14 @@ async componentDidMount () {
 //     .then(data => {
 //       console.log(data)
 //     });
-    this.props.navigation.navigate('CCLockers'); 
+    this.props.navigation.navigate('DeliveryFeed'); 
     
   }
 
   render() {
 
-    let stations= this.state.StationsList.map((stations,key)=>{
-      return (<Picker.Item key={key} label={stations.StationName} value={stations.StationName} />)});
+    let stations = this.state.StationsList.map((stations,key)=>{
+      return ( <Picker.Item key={key} label={stations.StationName} value={stations.StationName} />)});
     
     return (
       <SafeAreaView>
@@ -131,6 +155,7 @@ async componentDidMount () {
 
             <Form style={{ width: 390 }}>
               <View >
+               
                 <Icon name="location" style={{ alignSelf: 'center', marginTop: 10 }} />
                 <Text style={styles.titles} >תחנת מוצא</Text>
                 <Item picker style={styles.InputText}>
@@ -148,10 +173,6 @@ async componentDidMount () {
     
          {stations}
             
-                   {/* <Picker.Item label="חיפה - מרכז השמונה" value="key1" />
-                    <Picker.Item label="תל אביב - סבידור" value="תל אביב - סבידור" />
-                    <Picker.Item label="תל אביב - האוניברסיטה" value="key3" />
-                   <Picker.Item label=" תל אביב - השלום" value="key4" />  */}
                   </Picker>
                 </Item>
               </View>
@@ -175,9 +196,31 @@ async componentDidMount () {
                 </Item>
               </View>
 
-
               <CheckBoxes  />
+              <Icon name="person" style={{ alignSelf: 'center', marginTop: 10 }} />
+                <Text style={styles.titles}> פרטי לקוח קצה </Text>
 
+               
+               
+                   <Item>
+          <Input style={styles.InputText}
+            placeholderTextColor="grey"
+            placeholder="שם"
+            returnKeyType="search"
+           
+            onChangeText={val => this.setState({ CustName: val })}
+          />
+        </Item>
+   <Text>{this.state.CustName}</Text>
+        <Item>
+          <Input style={styles.InputText}
+            placeholderTextColor="grey"
+            placeholder="טלפון"
+            returnKeyType="search"
+       
+            onChangeText={val => this.setState({ CustPNum: val })}
+          />
+        </Item>
               <View  style={styles.section}>
                 <Icon name="line-weight" style={{ alignSelf: 'center', marginTop: 10 }} />
                 <Text style={styles.titles}> משקל חבילה </Text>
@@ -191,15 +234,13 @@ async componentDidMount () {
                     selectedValue={this.state.selected3}
                     onValueChange={this.onValueChange3.bind(this)}
                   >
-                    <Picker.Item label=" בחר משקל חבילה" value="None" />
+                    <Picker.Item label=" בחר משקל חבילה" value="10" />
                     <Picker.Item label=" מ 0 עד 3 קג " value="3" />
                     <Picker.Item label=" מ 3 עד 6 קג" value="6" />
                     <Picker.Item label="מ 6 עד 10 קג" value="10" />
                   </Picker>
                 </Item>
               </View>
-
-
 
               {/* <View  style={styles.section}>
               <Icon name="person" style={{ alignSelf: 'center', marginTop: 10 }} />
@@ -209,20 +250,15 @@ async componentDidMount () {
                   <Input />
                 </Item></View> */}
 
-
               <Button onPress={() => { this.addPack() }} style={{ alignSelf: 'center', backgroundColor: 'green', marginTop: 70, borderRadius: 10, borderWidth: 1, borderColor: 'black' }}><Text style={{ fontWeight: 'bold' }}>  צור כרטיס משלוח  </Text></Button>
+            
             </Form>
-
-
-
           </View>
         </ScrollView>
       </SafeAreaView>
     );
   }
 }
-
-
 
 const styles = ({
   container: {
@@ -239,7 +275,8 @@ const styles = ({
     backgroundColor: '#cbe8ba',
     borderRadius: 10,
     marginRight: 10,
-    marginLeft: 10
+    marginTop:10
+
   },
   titles: {
     textAlign: 'center',
