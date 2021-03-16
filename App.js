@@ -12,6 +12,8 @@ import CCRegister from './ClassComponent/CCRegister';
 import CCHome from './ClassComponent/CCHome';
 import HomeActivityList from './ClassComponent/HomeActivityList';
 import CCLockers from './ClassComponent/CCLockers';
+import CCDeliveryExpressFeed from './ClassComponent/CCDeliveryExpressFeed';
+
 
 const Stack = createStackNavigator();
 
@@ -28,6 +30,8 @@ export default function App() {
 <Stack.Screen name="Home" component={CCHome} />
 <Stack.Screen name="HomeActivityList" component={HomeActivityList} />
 <Stack.Screen name="CCLockers" component={CCLockers} />
+<Stack.Screen name="DeliveryExpress" component={CCDeliveryExpressFeed} />
+
 
 </Stack.Navigator>
 

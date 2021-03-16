@@ -1,11 +1,11 @@
-
 import React, { Component } from 'react'
 import { Image, Linking, Text, TouchableOpacity, TextInput, StyleSheet, View, Button, navigate, navigation } from 'react-native'
 
 export default class CCLogin extends Component {
     state = {
         email: '',
-        password: ''
+        password: '',
+        Users: [],
     }
     handleEmail = (text) => {
         this.setState({ email: text })
@@ -13,8 +13,69 @@ export default class CCLogin extends Component {
     handlePassword = (text) => {
         this.setState({ password: text })
     }
-    login = (email, pass) => {
-        alert('email: ' + email + ' password: ' + pass)
+
+    loginuser = () => {
+        this.login();
+        if (this.state.Users.length > 0) {
+            this.props.navigation.navigate('Home');
+        }
+        else {
+            alert('Wrong email or passowrd');
+        }
+
+    }
+    async componentDidMount() {
+
+        const apiStationsUrl = 'http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Users';
+        const response = await fetch(apiStationsUrl);
+        const data = await response.json()
+        this.setState({ Users: data, })
+        console.log(data);
+
+    };
+
+
+    login = () => {
+        //alert('email: ' + this.state.email + ' password: ' +this.state.password)
+        let email1 = this.state.email;
+        let pass1 = this.state.password
+        //console.log(data); 
+
+        console.log('start');
+        alert('start');
+        fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Users' + "/" + email1 + "" + "/" + pass1 + "",
+            {
+                method: 'GET',
+                headers: new Headers({
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'Accept': 'application/json; charset=UTF-8'
+                })
+            })
+            .then(res => {
+                console.log('res=', res);
+                console.log('res.status', res.status);
+                console.log('res.ok', res.ok);
+                return res.json()
+            })
+            .then(
+                (result) => {
+                    console.log("fetch btnFetchGetUsers= ", result);
+
+                    console.log('result=', result);
+                    this.setState({
+                        Users: result,
+                    })
+                    console.log(this.state.Users)
+                    alert(this.state.Users.length);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                    //alert(error)
+                });
+        console.log('end');
+
+
+
     }
 
     goToForgotPassword = () => this.props.navigation.navigate('ForgotPassword')
@@ -27,11 +88,11 @@ export default class CCLogin extends Component {
                     style={{
                         width: 80,
                         height: 80,
-                        alignSelf:'center',
-                        marginBottom:20
+                        alignSelf: 'center',
+                        marginBottom: 20
                     }}
                 />
-                <Text style={{ fontSize: 30, textAlign: 'center',fontWeight:'bold' , marginBottom:30}}> JestApp  </Text>
+                <Text style={{ fontSize: 30, textAlign: 'center', fontWeight: 'bold', marginBottom: 30 }}> JestApp  </Text>
                 <Text style={{ fontSize: 22, textAlign: 'center' }}>Sign In </Text>
                 <Text style={{ color: 'grey', textAlign: 'center', margin: 10 }}>Hey there! nice to see you again</Text>
                 <TextInput style={styles.input}
@@ -49,12 +110,13 @@ export default class CCLogin extends Component {
                     secureTextEntry={true}
                     onChangeText={this.handlePassword} />
 
-                <TouchableOpacity onPress={() => { this.props.navigation.navigate('Home'); }} style={styles.submitButton}>
+                <TouchableOpacity onPress={() => { this.props.navigation.navigate('DeliveryExpress'); }} style={styles.submitButton}>
                     <Text style={styles.submitButtonText}> Sign In </Text>
                 </TouchableOpacity>
+
                 <View style={{ flexDirection: 'row-reverse' }}>
                     <Text style={{ color: 'blue' }}
-                       onPress={() => { this.props.navigation.navigate('Register'); }} >
+                        onPress={() => { this.props.navigation.navigate('Register'); }} >
                         Sign Up ? {'\u00A0'}
                     </Text>
 
@@ -74,7 +136,7 @@ const styles = StyleSheet.create({
     container: {
         marginTop: 25,
         margin: 25
-     
+
 
     },
     input: {
