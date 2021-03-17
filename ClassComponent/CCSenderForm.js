@@ -74,7 +74,7 @@ export default class CCSenderForm extends Component {
  
      }
 
-     fetch('http://proj.ruppin.ac.il/igrop55/test2/tar1/api/Cstomers', {
+     fetch('http://proj.ruppin.ac.il/igrop55/test2/tar1/api/Customers', {
       method: 'POST',
       body: JSON.stringify(customer_data),
       headers: new Headers({

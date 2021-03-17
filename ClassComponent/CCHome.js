@@ -40,7 +40,7 @@ export default class Home extends Component {
     <View>
     <Button style={{width:50,justifyContent:'center',alignItems:'center'}}
           title='שליח רכבת'
-          onPress={() => { this.props.navigation.navigate('New Train Route');}}
+          onPress={() => { this.props.navigation.navigate('NewTrainRoute');}}
 
           
           
@@ -54,7 +54,7 @@ export default class Home extends Component {
         <Text></Text>
          <Button
           title='שליח אקספרס'
-          onPress={() => { this.props.navigation.navigate('New Express Route');}}
+          onPress={() => { this.props.navigation.navigate('NewExpressRoute');}}
 
           
         />

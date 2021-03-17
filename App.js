@@ -30,13 +30,13 @@ export default function App() {
 <Stack.Screen name="NewDelivery" component={CCSenderForm} />
 <Stack.Screen name="Register" component={CCRegister} />
 <Stack.Screen name="Home" component={CCHome} />
-<Stack.Screen name="New Train Route" component={CCTrainRouteSelection} />
-<Stack.Screen name="New Express Route" component={CCExpressRouteSelection} />
+
+
 <Stack.Screen name="HomeActivityList" component={HomeActivityList} />
 <Stack.Screen name="CCLockers" component={CCLockers} />
 <Stack.Screen name="DeliveryExpress" component={CCDeliveryExpressFeed} />
-<Stack.Screen name="New Train Route" component={CCTrainRouteSelection} />
-<Stack.Screen name="New Express Route" component={CCExpressRouteSelection} />
+<Stack.Screen name="NewTrainRoute" component={CCTrainRouteSelection} />
+<Stack.Screen name="NewExpressRoute" component={CCExpressRouteSelection} />
 
 </Stack.Navigator>
 
