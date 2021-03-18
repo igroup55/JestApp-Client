@@ -54,67 +54,67 @@ async componentDidMount () {
   }
 
 
-   addPack = () => {
+   navigate = () => {
+
+    this.props.navigation.navigate('DeliveryFeed')
+
+//     const package_data = {
+
+//       StartStation: this.state.selected1,
+//       EndStation: this.state.selected2,
+//       Pweight: this.state.selected3,
 
 
+//     }
 
-    const package_data = {
-
-      StartStation: this.state.selected1,
-      EndStation: this.state.selected2,
-      Pweight: this.state.selected3,
-
-
-    }
-
-    fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages', {
-      method: 'POST',
-      body: JSON.stringify(package_data),
-      headers: new Headers({
-      'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
-      })
-      })
-      .then(res => {
-      console.log('res=', res);
-      return res.json()
-      })
-      .then(
-      (result) => {
-      console.log("fetch POST= ", result);
-
-      },
-      (error) => {
-      console.log("err post=", error);
-      });
-
-//  console.log(package_data)
-//     const url = `http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages`;
-//     fetch(url, {
-//       method: 'POST', // *GET, POST, PUT, DELETE, etc.
-//       mode: 'cors', // no-cors, *cors, same-origin
-//       cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-//       credentials: 'same-origin', // include, *same-origin, omit
+//     fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages', {
+//       method: 'POST',
+//       body: JSON.stringify(package_data),
 //       headers: new Headers({
-//         'Content-Type': 'application/json; text/json; application/x-www-form-urlencoded  ;  charset=UTF-8'
+//       'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+//       })
+//       })
+//       .then(res => {
+//       console.log('res=', res);
+//       return res.json()
+//       })
+//       .then(
+//       (result) => {
+//       console.log("fetch POST= ", result);
 
-//         // 'Content-Type': 'application/x-www-form-urlencoded',
-//       }),
-//       Accept: 'application/json ',
+//       },
+//       (error) => {
+//       console.log("err post=", error);
+//       });
 
-//       redirect: 'follow', // manual, *follow, error
-//       referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-//       body: package_data // body data type must match "Content-Type" header
-//     }).then(response => response.json())
-//     .then(data => {
-//       console.log(data)
-//     });
-   this.props.navigation.navigate('CCLockers');
+// //  console.log(package_data)
+// //     const url = `http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages`;
+// //     fetch(url, {
+// //       method: 'POST', // *GET, POST, PUT, DELETE, etc.
+// //       mode: 'cors', // no-cors, *cors, same-origin
+// //       cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+// //       credentials: 'same-origin', // include, *same-origin, omit
+// //       headers: new Headers({
+// //         'Content-Type': 'application/json; text/json; application/x-www-form-urlencoded  ;  charset=UTF-8'
+
+// //         // 'Content-Type': 'application/x-www-form-urlencoded',
+// //       }),
+// //       Accept: 'application/json ',
+
+// //       redirect: 'follow', // manual, *follow, error
+// //       referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+// //       body: package_data // body data type must match "Content-Type" header
+// //     }).then(response => response.json())
+// //     .then(data => {
+// //       console.log(data)
+// //     });
+  
 } 
     
 
  
   render() {
-    this.componentDidMount();
+  
     let stations= this.state.StationsList.map((stations,key)=>{
       return (<Picker.Item key={key} label={stations.StationName} value={stations.StationName} />)});
 
@@ -171,14 +171,7 @@ async componentDidMount () {
 
               <Icon name="calendar"  style={{ alignSelf: 'center', marginTop: 10 }} />
               {/* <DatePickerExample/> */}
-              <Button  style={{ alignSelf: 'center', backgroundColor: 'green', marginTop: 70, borderRadius: 10, borderWidth: 1, borderColor: 'black' }}><Text style={{ fontWeight: 'bold' }}>  בחר תאריך נסיעה </Text></Button>
-
-         
-                    
-
-
-         
-
+              <Button onPress = {this.navigate} style={{ alignSelf: 'center', backgroundColor: 'green', marginTop: 70, borderRadius: 10, borderWidth: 1, borderColor: 'black' }}><Text style={{ fontWeight: 'bold' }}>  חפש משלוחים </Text></Button>
 
             </Form>
 

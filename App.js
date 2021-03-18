@@ -6,7 +6,7 @@ import CCSenderForm from './ClassComponent/CCSenderForm';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import CCDeliveryFeed from './ClassComponent/CCDeliveryFeed';
-import CCMain from './ClassComponent/CCMain';
+
 import CCLogin from './ClassComponent/CCLogin';
 import CCRegister from './ClassComponent/CCRegister';
 import CCHome from './ClassComponent/CCHome';

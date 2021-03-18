@@ -117,7 +117,7 @@ async componentDidMount () {
 
  
   render() {
-    this.componentDidMount();
+ 
     let stations= this.state.StationsList.map((stations,key)=>{
       return (<Picker.Item key={key} label={stations.StationName} value={stations.StationName} />)});
 
