@@ -9,6 +9,7 @@ import Map from './Map';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps'
 import * as Location from 'expo-location';
+
 export default class CCExpressRouteSelection extends Component {
   constructor(props) {
     super(props);
@@ -16,30 +17,18 @@ export default class CCExpressRouteSelection extends Component {
       selected1: null,
       selected2: null,
       selected3: null,
-      StationsList : []
+      StationsList :[],
+      latitude:0,
+      longitude:0,
+      error:null
     };
 
   }
 
-async componentDidMount () {
-  //  fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Stations',{
-  //     method: 'GET',
-  //      headers: {
-  //           Accept: 'application/json, text/json, charset=UTF-8',
-  //           'Content-Type': 'application/json, text/json'
-  //     }
-  //    })
-  //    .then(response => response.json())
-  //   .then(data => {
-  //     console.log(data);
-  //   })
-  //    .catch(err => console.error(err));
-   const apiStationsUrl ='http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Stations';
-   const response = await fetch(apiStationsUrl);
-   const data = await response.json()
-   this.setState({StationsList:data,})
-   console.log(data);
-};
+// async componentDidMount () {
+  
+  
+// };
   onValueChange1 = (value) => {
     this.setState({
       selected1: value
@@ -57,65 +46,31 @@ async componentDidMount () {
   }
 
 
-   addPack = () => {
+   async componentDidMount(){
+      const apiStationsUrl ='http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Stations';
+      const response = await fetch(apiStationsUrl);
+      const data = await response.json()
+      this.setState({StationsList:data,})
+      console.log(data);
 
 
-
-    const package_data = {
-
-      StartStation: this.state.selected1,
-      EndStation: this.state.selected2,
-      Pweight: this.state.selected3,
-
-
+      navigator.geolocation.getCurrentPosition(position =>{this.setState({
+        latitude:position.coords.latitude,
+        longitude:position.coords.longitude,
+        error:null
+      });
+    },
+    error => this.setState({error:error.message}),
+    {enableHighAccuracy:true,timeout:20000,maximumAge:2000}
+    );
     }
 
-    fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages', {
-      method: 'POST',
-      body: JSON.stringify(package_data),
-      headers: new Headers({
-      'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
-      })
-      })
-      .then(res => {
-      console.log('res=', res);
-      return res.json()
-      })
-      .then(
-      (result) => {
-      console.log("fetch POST= ", result);
+    navigate = () => {
 
-      },
-      (error) => {
-      console.log("err post=", error);
-      });
-
-//  console.log(package_data)
-//     const url = `http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages`;
-//     fetch(url, {
-//       method: 'POST', // *GET, POST, PUT, DELETE, etc.
-//       mode: 'cors', // no-cors, *cors, same-origin
-//       cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-//       credentials: 'same-origin', // include, *same-origin, omit
-//       headers: new Headers({
-//         'Content-Type': 'application/json; text/json; application/x-www-form-urlencoded  ;  charset=UTF-8'
-
-//         // 'Content-Type': 'application/x-www-form-urlencoded',
-//       }),
-//       Accept: 'application/json ',
-
-//       redirect: 'follow', // manual, *follow, error
-//       referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-//       body: package_data // body data type must match "Content-Type" header
-//     }).then(response => response.json())
-//     .then(data => {
-//       console.log(data)
-//     });
-   this.props.navigation.navigate('New Express Route');
-} 
-    
-
- 
+      this.props.navigation.navigate('DeliveryExpress')
+  
+  
+  } 
   render() {
  
     let stations= this.state.StationsList.map((stations,key)=>{
@@ -159,35 +114,20 @@ async componentDidMount () {
                
               </View>
            
-              {/* <View style={styles.container}>
-                <MapView
-                style={{flex: 0.7, width:Dimensions.get('window').width }}
-                region={{
-                latitude: 32.157154,
-                longitude: 34.843893,
-                latitudeDelta: 0.0122,
-                longitudeDelta: 0.0121,
-                }} >
+              <View style={styles.container}>
+                <MapView region={{latitude: this.state.latitude,longitude:this.state.longitude,longitudeDelta:0.0121,latitudeDelta:0.015}} style={{width: Dimensions.get('window').width, height:250}}
+               >
                 <Marker
-                coordinate={{
-                latitude: 32.15715,
-                longitude: 34.843893
-                }}
+                coordinate={{latitude: this.state.latitude,longitude:this.state.longitude}}
                 title='my place:)'
                 description='here i am'
                 //image={require('../assets/icon.png')}
                 />
                 </MapView>
-                </View> */}
+                </View>
 
               
-              <Button  style={{ alignSelf: 'center', backgroundColor: 'green', marginTop: 70, borderRadius: 10, borderWidth: 1, borderColor: 'black' }}><Text style={{ fontWeight: 'bold' }}>  חפש חבילות </Text></Button>
-
-         
-                    
-
-
-         
+              <Button onPress = {this.navigate} style={{ alignSelf: 'center', backgroundColor: 'green', marginTop: 70, borderRadius: 10, borderWidth: 1, borderColor: 'black' }}><Text style={{ fontWeight: 'bold' }}>  חפש חבילות </Text></Button>
 
 
             </Form>

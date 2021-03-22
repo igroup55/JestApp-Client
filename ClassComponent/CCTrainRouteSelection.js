@@ -1,10 +1,12 @@
 import React, { Component, useState } from 'react';
-import { CheckBox, Container, Header, Content, Form, Item, Input, Label, Picker, Footer, Right, Button, Icon, DatePicker } from 'native-base';
+import { CheckBox, Container, Header, Content, Form, Item, Input, Label, Picker, Footer, Right, Button, Icon} from 'native-base';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import CheckBoxes from './CCCheckBox';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import ReactDOM from "react-dom";
-import DatePickerExample from './DatePicker';
+import DatePicker from 'react-native-datepicker'
+
+
+
 
 export default class CCTrainRouteSelection extends Component {
   constructor(props) {
@@ -13,24 +15,16 @@ export default class CCTrainRouteSelection extends Component {
       selected1: null,
       selected2: null,
       selected3: null,
-      StationsList : []
+      date:new Date(),
+       StationsList : []
     };
-
+    
   }
-
+  setDate(newDate){
+    this.setState({ chosenDate: newDate });
+  }
 async componentDidMount () {
-  //  fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Stations',{
-  //     method: 'GET',
-  //      headers: {
-  //           Accept: 'application/json, text/json, charset=UTF-8',
-  //           'Content-Type': 'application/json, text/json'
-  //     }
-  //    })
-  //    .then(response => response.json())
-  //   .then(data => {
-  //     console.log(data);
-  //   })
-  //    .catch(err => console.error(err));
+ 
    const apiStationsUrl ='http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Stations';
    const response = await fetch(apiStationsUrl);
    const data = await response.json()
@@ -41,16 +35,21 @@ async componentDidMount () {
     this.setState({
       selected1: value
     });
+    console.log(this.state.selected1);
+
   }
   onValueChange2 = (value) => {
     this.setState({
       selected2: value
     });
+    console.log(this.state.selected2);
+
   }
   onValueChange3 = (value) => {
     this.setState({
       selected3: value
     });
+    console.log(this.state.selected3);
   }
 
 
@@ -58,63 +57,11 @@ async componentDidMount () {
 
     this.props.navigation.navigate('DeliveryFeed')
 
-//     const package_data = {
 
-//       StartStation: this.state.selected1,
-//       EndStation: this.state.selected2,
-//       Pweight: this.state.selected3,
-
-
-//     }
-
-//     fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages', {
-//       method: 'POST',
-//       body: JSON.stringify(package_data),
-//       headers: new Headers({
-//       'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
-//       })
-//       })
-//       .then(res => {
-//       console.log('res=', res);
-//       return res.json()
-//       })
-//       .then(
-//       (result) => {
-//       console.log("fetch POST= ", result);
-
-//       },
-//       (error) => {
-//       console.log("err post=", error);
-//       });
-
-// //  console.log(package_data)
-// //     const url = `http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages`;
-// //     fetch(url, {
-// //       method: 'POST', // *GET, POST, PUT, DELETE, etc.
-// //       mode: 'cors', // no-cors, *cors, same-origin
-// //       cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-// //       credentials: 'same-origin', // include, *same-origin, omit
-// //       headers: new Headers({
-// //         'Content-Type': 'application/json; text/json; application/x-www-form-urlencoded  ;  charset=UTF-8'
-
-// //         // 'Content-Type': 'application/x-www-form-urlencoded',
-// //       }),
-// //       Accept: 'application/json ',
-
-// //       redirect: 'follow', // manual, *follow, error
-// //       referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-// //       body: package_data // body data type must match "Content-Type" header
-// //     }).then(response => response.json())
-// //     .then(data => {
-// //       console.log(data)
-// //     });
-  
 } 
-    
 
- 
   render() {
-  
+    const { date } = this.state;
     let stations= this.state.StationsList.map((stations,key)=>{
       return (<Picker.Item key={key} label={stations.StationName} value={stations.StationName} />)});
 
@@ -169,8 +116,35 @@ async componentDidMount () {
               </View>
 
 
-              <Icon name="calendar"  style={{ alignSelf: 'center', marginTop: 10 }} />
-              {/* <DatePickerExample/> */}
+
+              <Text style={{ alignSelf: 'center', marginTop: 10,fontWeight:'bold' }}>בחר תאריך נסיעה</Text>
+              {/* <Icon name="calendar"  style={{ alignSelf: 'center', marginTop: 10 }} /> */}
+              
+              <DatePicker
+        style={{ alignSelf: 'center', marginTop: 10 }}
+        date={this.state.date}
+        mode="date"
+        placeholder="select date"
+        format="DD-MM-YYYY"
+        minDate={new Date()}
+        maxDate="2021-12-30"
+        confirmBtnText="Confirm"
+        cancelBtnText="Cancel"
+        customStyles={{
+          dateIcon: {
+            position: 'absolute',
+            left: 0,
+            top: 4,
+            marginLeft: 0
+          },
+          dateInput: {
+            marginLeft: 36
+          }
+          // ... You can check the source to find the other keys.
+        }}
+        onDateChange={(date) => {this.setState({date: date}) }}
+      />
+
               <Button onPress = {this.navigate} style={{ alignSelf: 'center', backgroundColor: 'green', marginTop: 70, borderRadius: 10, borderWidth: 1, borderColor: 'black' }}><Text style={{ fontWeight: 'bold' }}>  חפש משלוחים </Text></Button>
 
             </Form>

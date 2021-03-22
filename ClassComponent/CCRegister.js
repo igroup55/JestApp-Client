@@ -12,8 +12,9 @@ import { Text,
    
            
         } from 'react-native';
-import {Icon} from 'native-base';        
-import { Button, Header ,Image} from 'react-native-elements';
+import {Icon,Button} from 'native-base';        
+import { Header ,Image} from 'react-native-elements';
+import DatePicker from 'react-native-datepicker'
 
 
 
@@ -24,6 +25,7 @@ export default class RegisterForm extends Component {
         email: '',
         phone_number: '',
         ID:'',
+        birthdate:new Date(),
         ProfilePic:'',
         fullName_Error: '',
         password_Error: '',
@@ -45,6 +47,7 @@ export default class RegisterForm extends Component {
     PhoneNum:this.state.phone_number,
     UserId: this.state.ID,
     ProfilePic: this.state.ProfilePic,
+    BirthDate:this.state.birthdate
     }
     console.log(User.fullName);
     console.log(User.email);
@@ -68,23 +71,7 @@ export default class RegisterForm extends Component {
       (error) => {
       console.log("err post=", error);
       });
-    ////
-    // const url = `http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Users`;
-    // fetch(url, {
-    //   method: 'POST', // *GET, POST, PUT, DELETE, etc.
-    //   mode: 'cors', // no-cors, *cors, same-origin
-    //   cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-    //   credentials: 'same-origin', // include, *same-origin, omit
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //     // 'Content-Type': 'application/x-www-form-urlencoded',
-    //   },
-    //   redirect: 'follow', // manual, *follow, error
-    //   referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-    //   body: JSON.stringify(User) // body data type must match "Content-Type" header
-    // }).then(response =>
-    //   console.log(response.json())
-    // );
+   
   }
     onChangeText = (key, val) => {
         this.setState({ [key]: val })
@@ -268,20 +255,46 @@ export default class RegisterForm extends Component {
           placeholderTextColor='white'
           onChangeText={val => {this.onChangeText('ID', val); this.setState({ID_Error:''})}}
         /><View><Text style={styles.FormErrorText}>{this.state.ID_Error}</Text></View>
-         <Button onPress={this.btnOpenGalery.bind(this)} style={{backgroundColor: '#A7D489',padding:20}} title='תמונת פרופיל'/>
-         <View style={{padding:10}}></View>
+        {/* <View>
+        <DatePicker
+        style={{ alignSelf: 'center', marginTop: 5 }}
+        date={this.state.date}
+        mode="date"
+        placeholder="תאריך לידה"
+        format="DD-MM-YYYY"
+        minDate="1950-01-30"
+        maxDate={new Date()}
+        confirmBtnText="Confirm"
+        cancelBtnText="Cancel"
+        customStyles={{
+          dateIcon: {
+            position: 'absolute',
+            left: 0,
+            top: 4,
+            marginLeft: 0
+          },
+          dateInput: {
+            marginLeft: 36
+          }
+          // ... You can check the source to find the other keys.
+        }}
+        onDateChange={(date) => {this.setState({birthdate: date}) }}
+      />
+        </View> */}
+        <View style={{ alignSelf: 'center', marginTop: 10 }}
+>
+        <Button  onPress={this.btnOpenGalery.bind(this)} style={{ alignSelf: 'center', backgroundColor: '#A7D489', marginTop:10, borderRadius: 10, borderWidth: 1, borderColor: 'black' }}><Text style={{ fontWeight: 'bold' }}>  תמונת פרופיל </Text> 
+        <Icon name="image" style={{ alignSelf: 'center',  }} />
+        </Button>
+
+        </View>
+        <View>
+        <Button  onPress={this.signUp} style={{ alignSelf: 'center', backgroundColor: '#A7D489', marginTop:30, borderRadius: 10, borderWidth: 1, borderColor: 'black' }}><Text style={{ fontWeight: 'bold' }}> הרשם עכשיו </Text> 
+        <Icon name="train" style={{ alignSelf: 'center',  }} />
+        </Button>
          
-         {/* <Button onPress={this.btnOpenGalery.bind(this)} style={styles.gallery}>
-               <Icon name='image'/><Text>תמונת פרופיל</Text>
-            </Button>        */}
-         
-        {/* בחירת תאריך לידה */}
-        {/* <ChooseDate/> */}
-        <Button
-          title='הרשם'
-          onPress={this.signUp}
-          
-        />
+        </View>
+       
       </View>
             </View>
             
