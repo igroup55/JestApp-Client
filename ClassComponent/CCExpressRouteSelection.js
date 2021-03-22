@@ -159,7 +159,7 @@ async componentDidMount () {
                
               </View>
            
-              <View style={styles.container}>
+              {/* <View style={styles.container}>
                 <MapView
                 style={{flex: 0.7, width:Dimensions.get('window').width }}
                 region={{
@@ -178,7 +178,7 @@ async componentDidMount () {
                 //image={require('../assets/icon.png')}
                 />
                 </MapView>
-                </View>
+                </View> */}
 
               
               <Button  style={{ alignSelf: 'center', backgroundColor: 'green', marginTop: 70, borderRadius: 10, borderWidth: 1, borderColor: 'black' }}><Text style={{ fontWeight: 'bold' }}>  חפש חבילות </Text></Button>

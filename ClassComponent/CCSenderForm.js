@@ -14,7 +14,8 @@ export default class CCSenderForm extends Component {
       selected3: null,
       StationsList : [],
       CustPNum : ' ',
-      CustName :' '
+      CustName :' ',
+      EmptyLocker : null
     };
 
   }
@@ -68,9 +69,11 @@ export default class CCSenderForm extends Component {
   AddCust = () => {
     
     const customer_data = {
-
+CustomerId: '18',
+PackageID: '23353',
       FullName : this.state.CustName,
       PhoneNum : this.state.CustPNum
+      
  
      }
 
@@ -87,56 +90,69 @@ export default class CCSenderForm extends Component {
 
    addPack = () => {
 
-
+// ----------------------------------------------------------------------------------------------------------------
+// Search For empty lockers ( לוקרים פנויים )
+// ----------------------------------------------------------------------------------------------------------------
     
-    const package_data = {
+    const apiStationsUrl ='http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Lockers';
+     const response = await fetch(apiStationsUrl);
+     const data = await response.json()
+     console.log(data)
+     this.setState({EmptyLocker:data})
 
-      StartStation: this.state.selected1,
-      EndStation: this.state.selected2,
-      Pweight: this.state.selected3,
+     
+
+     if(this.state.EmptyLocker !== null)
+     {
+      const package_data = {
+
+        StartStation: this.state.selected1,
+        EndStation: this.state.selected2,
+        Pweight: this.state.selected3,
+        Status : 1
+        
+  
+      }
+
+      fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages', {
+        method: 'POST',
+        body: JSON.stringify(package_data),
+        headers: new Headers({
+        'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+        })
+        })
+  
+        {this.AddCust()}
+
+   
 
     }
 
-    
+    else {
 
-    fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages', {
-      method: 'POST',
-      body: JSON.stringify(package_data),
-      headers: new Headers({
-      'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
-      })
-      })
+      const package_data = {
 
-      {this.AddCust()}
-
-    
-
-    
-
-   
-  
-      
-//  console.log(package_data)
-//     const url = `http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages`;
-//     fetch(url, {
-//       method: 'POST', // *GET, POST, PUT, DELETE, etc.
-//       mode: 'cors', // no-cors, *cors, same-origin
-//       cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-//       credentials: 'same-origin', // include, *same-origin, omit
-//       headers: new Headers({
-//         'Content-Type': 'application/json; text/json; application/x-www-form-urlencoded  ;  charset=UTF-8'
+        StartStation: this.state.selected1,
+        EndStation: this.state.selected2,
+        Pweight: this.state.selected3,
+        Status : 0
         
-//         // 'Content-Type': 'application/x-www-form-urlencoded',
-//       }),
-//       Accept: 'application/json ',
+  
+      }
 
-//       redirect: 'follow', // manual, *follow, error
-//       referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-//       body: package_data // body data type must match "Content-Type" header
-//     }).then(response => response.json())
-//     .then(data => {
-//       console.log(data)
-//     });
+      fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages', {
+        method: 'POST',
+        body: JSON.stringify(package_data),
+        headers: new Headers({
+        'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+        })
+        })
+  
+        {this.AddCust()}
+
+
+    }
+
     this.props.navigation.navigate('DeliveryFeed'); 
     
   }

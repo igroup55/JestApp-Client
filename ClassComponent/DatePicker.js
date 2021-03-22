@@ -15,7 +15,7 @@ export default class DatePickerExample extends Component {
        
         <Content>
           <DatePicker
-            defaultDate={new Date(2018, 4, 4)}
+            value={new Date(2018, 4, 4)}
             minimumDate={new Date(2018, 1, 1)}
             maximumDate={new Date(2018, 12, 31)}
             locale={"en"}

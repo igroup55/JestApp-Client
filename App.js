@@ -30,8 +30,6 @@ export default function App() {
 <Stack.Screen name="NewDelivery" component={CCSenderForm} />
 <Stack.Screen name="Register" component={CCRegister} />
 <Stack.Screen name="Home" component={CCHome} />
-
-
 <Stack.Screen name="HomeActivityList" component={HomeActivityList} />
 <Stack.Screen name="CCLockers" component={CCLockers} />
 <Stack.Screen name="DeliveryExpress" component={CCDeliveryExpressFeed} />
