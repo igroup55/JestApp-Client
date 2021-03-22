@@ -7,82 +7,38 @@ export default class CCLogin extends Component {
         password: '',
         Users: [],
     }
-    handleEmail = (text) => {
-        this.setState({ email: text })
-    }
-    handlePassword = (text) => {
-        this.setState({ password: text })
-    }
+
+
+
 
     loginuser = () => {
-        this.login();
-        if (this.state.Users.length > 0) {
-            this.props.navigation.navigate('Home');
-        }
-        else {
-            alert('Wrong email or passowrd');
-        }
+        console.log(this.state.Users);
+        this.state.Users.map((user)  => {
+            console.log(user);
+            if (this.state.email === user.EmailAddress && this.state.password === user.Password) {
+                this.props.navigation.navigate('Home');
+            }
+            else {
+                alert('Wrong email or passowrd');
+            }
+        });
+
 
     }
-    async componentDidMount() {
-
-        const apiStationsUrl = 'http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Users';
-        const response = await fetch(apiStationsUrl);
-        const data = await response.json()
-        this.setState({ Users: data, })
-        console.log(data);
-
-    };
 
 
-   async login () {
-        //alert('email: ' + this.state.email + ' password: ' +this.state.password)
-        let email = this.state.email;
-        let pass = this.state.password
-        //console.log(data); 
-        
-        const apiUserUrl ='http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Users?email='+email+'&pass='+pass;
+
+    async login(email, password) {
+
+        console.log(email);
+        console.log(password);
+
+        const apiUserUrl = 'http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Users?email=' + email + '&pass=' + password;
         const response = await fetch(apiUserUrl);
         const data = await response.json()
-        console.log(data)
-      //  this.setState({StationsList:data})
-       
-       
-        // console.log('start');
-        // alert('start');
-        // fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Users?email={'+email+'}&pass={'+pass+'}',
-        //     {
-        //         method: 'GET',
-        //         headers: new Headers({
-        //             'Content-Type': 'application/json; charset=UTF-8',
-        //             'Accept': 'application/json; charset=UTF-8'
-        //         })
-        //     })
-        //     .then(res => {
-        //         console.log('res=', res);
-        //         console.log('res.status', res.status);
-        //         console.log('res.ok', res.ok);
-        //         return res.json()
-        //     })
-        //     .then(
-        //         (result) => {
-        //             console.log("fetch btnFetchGetUsers= ", result);
-
-        //             console.log('result=', result);
-        //             this.setState({
-        //                 Users: result,
-        //             })
-        //             console.log(this.state.Users)
-        //             alert(this.state.Users.length);
-        //         },
-        //         (error) => {
-        //             console.log("err post=", error);
-        //             //alert(error)
-        //         });
-        // console.log('end');
-
-
-
+        this.setState({ Users: data, });
+        console.log(this.state.Users[0].EmailAddress);
+        this.loginuser();
     }
 
     goToForgotPassword = () => this.props.navigation.navigate('ForgotPassword')
@@ -107,7 +63,8 @@ export default class CCLogin extends Component {
                     placeholder="Email"
                     placeholderTextColor="green"
                     autoCapitalize="none"
-                    onChangeText={this.handleEmail} />
+                    onChangeText={val => this.setState({ email: val })}
+                />
 
                 <TextInput style={styles.input}
                     underlineColorAndroid="transparent"
@@ -115,9 +72,13 @@ export default class CCLogin extends Component {
                     placeholderTextColor="green"
                     autoCapitalize="none"
                     secureTextEntry={true}
-                    onChangeText={this.handlePassword} />
+                    onChangeText={val => this.setState({ password: val })}
 
-                <TouchableOpacity onPress={() => { this.props.navigation.navigate('Home'); }} style={styles.submitButton}>
+                />
+
+
+
+                <TouchableOpacity onPress={() => { this.login(this.state.email, this.state.password) }} style={styles.submitButton}>
                     <Text style={styles.submitButtonText}> Sign In </Text>
                 </TouchableOpacity>
 
