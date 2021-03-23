@@ -13,7 +13,7 @@ export default class CCLogin extends Component {
 
     loginuser = () => {
         console.log(this.state.Users);
-        this.state.Users.map((user)  => {
+        this.state.Users.map((user) => {
             console.log(user);
             if (this.state.email === user.EmailAddress && this.state.password === user.Password) {
                 this.props.navigation.navigate('Home');
