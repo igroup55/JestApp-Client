@@ -4,6 +4,8 @@ import { SafeAreaView, ScrollView, StyleSheet, TextInput, Text, View } from 'rea
 import CheckBoxes from './CCCheckBox';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import ReactDOM from "react-dom";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default class CCSenderForm extends Component {
   constructor(props) {
@@ -15,16 +17,20 @@ export default class CCSenderForm extends Component {
       StationsList: [],
       CustPNum: ' ',
       CustName: ' ',
-      CustomerId: '',
+    
       PackageID: null,
       SEmptyLocker: null,
-      EEmptyLocker: null
+      EEmptyLocker: null,
+      UserId : null,
+      Address: ''
 
     };
 
   }
 
   async componentDidMount() {
+
+    {this.getData()}
     //  fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Stations',{
     //       method: 'GET',
     //         headers: {
@@ -70,18 +76,21 @@ export default class CCSenderForm extends Component {
 
   }
 
-  AddCust = () => {
+  async AddCust () {
 
+   
     const customer_data = {
-      CustomerId: '18',
+
+     Address : this.state.Address,
       PackageID: this.state.PackageID,
       FullName: this.state.CustName,
-      PhoneNum: this.state.CustPNum
+      PhoneNum: this.state.CustPNum,
 
 
     }
+    console.log(customer_data);
 
-    fetch('http://proj.ruppin.ac.il/igrop55/test2/tar1/api/Customers', {
+    fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Customers', {
       method: 'POST',
       body: JSON.stringify(customer_data),
       headers: new Headers({
@@ -90,6 +99,19 @@ export default class CCSenderForm extends Component {
     })
 
 
+  }
+
+  async getData ()  {
+    try {
+       jsonValue = await AsyncStorage.getItem('UserId')
+
+     jsonValue != null ?  UserDetails = JSON.parse(jsonValue) : null;
+     this.setState({UserId:UserDetails.UserId})
+     
+    } catch(e) {
+      alert('Error get Item')
+      // error reading value
+    }
   }
 
   async addPack() {
@@ -112,29 +134,75 @@ export default class CCSenderForm extends Component {
     this.setState({ EEmptyLocker: End })
     console.log(this.state.EEmptyLocker)
 
+    
    if (this.state.EEmptyLocker !== null && this.state.SEmptyLocker !== null) {
-
-
+ 
       const package_data = {
 
         StartStation: this.state.selected1,
         EndStation: this.state.selected2,
         Pweight: this.state.selected3,
+        UserId : this.state.UserId,
         Status: 1
 
 
       }
 
-      fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages', {
+     fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages', {
         method: 'POST',
         body: JSON.stringify(package_data),
         headers: new Headers({
           'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
         })
+      }) 
+
+
+  const apiLockersUrl = 'http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages?UserID='+ this.state.UserId;
+  const response = await fetch(apiLockersUrl);
+  const ID = await response.json()
+  this.setState({ PackageID: ID[0]["PackageId"]})
+ 
+ 
+     const Slocker_update ={
+
+      LockerID:this.state.SEmptyLocker[0]["LockerID"],
+    PackageID:this.state.PackageID
+
+     }
+
+     
+      
+      fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Lockers', {
+        method: 'PUT',
+        body: JSON.stringify(Slocker_update),
+        headers: new Headers({
+          'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+        })
       })
+
+      const Elocker_update ={
+
+        LockerID:this.state.EEmptyLocker[0]["LockerID"],
+      PackageID:this.state.PackageID
+  
+       }
+
       
 
-      { this.AddCust() }
+       fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Lockers', {
+        method: 'PUT',
+        body: JSON.stringify(Elocker_update),
+        headers: new Headers({
+          'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+        })
+      })
+
+
+    
+
+   
+this.AddCust() 
+
 
     }
 
@@ -145,6 +213,7 @@ export default class CCSenderForm extends Component {
         StartStation: this.state.selected1,
         EndStation: this.state.selected2,
         Pweight: this.state.selected3,
+        UserId: this.state.UserId ,
         Status: 0
 
 
@@ -158,11 +227,9 @@ export default class CCSenderForm extends Component {
         })
       })
 
-      { this.AddCust() }
-
     }
-
-    this.props.navigation.navigate('DeliveryFeed');
+    
+    this.props.navigation.navigate('CCLockers');
 
   }
 

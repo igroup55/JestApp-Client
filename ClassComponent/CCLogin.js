@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Image, Linking, Text, TouchableOpacity, TextInput, StyleSheet, View, Button, navigate, navigation } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class CCLogin extends Component {
     state = {
@@ -8,15 +9,28 @@ export default class CCLogin extends Component {
         Users: [],
     }
 
-
+    storeData = async (key,value) => {
+       
+        try {
+          const jsonValue = JSON.stringify(value);
+          await AsyncStorage.setItem(key, jsonValue);
+          console.log(key+": "+jsonValue);
+        } catch (e) {
+          console.log(e);
+        }
+      };
+      
 
 
     loginuser = () => {
         console.log(this.state.Users);
         this.state.Users.map((user) => {
             console.log(user);
+        
             if (this.state.email === user.EmailAddress && this.state.password === user.Password) {
+                {this.storeData('UserId',user)}
                 this.props.navigation.navigate('Home');
+               
             }
             else {
                 alert('Wrong email or passowrd');
@@ -30,8 +44,7 @@ export default class CCLogin extends Component {
 
     async login(email, password) {
 
-        console.log(email);
-        console.log(password);
+
 
         const apiUserUrl = 'http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Users?email=' + email + '&pass=' + password;
         const response = await fetch(apiUserUrl);
