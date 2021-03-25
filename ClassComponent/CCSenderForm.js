@@ -7,6 +7,7 @@ import ReactDOM from "react-dom";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
+
 export default class CCSenderForm extends Component {
   constructor(props) {
     super(props);
@@ -17,11 +18,12 @@ export default class CCSenderForm extends Component {
       StationsList: [],
       CustPNum: ' ',
       CustName: ' ',
-    
+SStationName: '' ,
+EStationName: '' ,
       PackageID: null,
       SEmptyLocker: null,
       EEmptyLocker: null,
-      UserId : null,
+      UserId: null,
       Address: ''
 
     };
@@ -30,7 +32,7 @@ export default class CCSenderForm extends Component {
 
   async componentDidMount() {
 
-    {this.getData()}
+    { this.getData() }
     //  fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Stations',{
     //       method: 'GET',
     //         headers: {
@@ -47,7 +49,7 @@ export default class CCSenderForm extends Component {
     const apiStationsUrl = 'http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Stations';
     const response = await fetch(apiStationsUrl);
     const data = await response.json()
-    console.log(data)
+    
     this.setState({ StationsList: data })
 
 
@@ -58,7 +60,7 @@ export default class CCSenderForm extends Component {
     this.setState({
       selected1: value
     });
-    console.log(this.state.selected1)
+ 
   }
 
   onValueChange2 = (value) => {
@@ -76,19 +78,19 @@ export default class CCSenderForm extends Component {
 
   }
 
-  async AddCust () {
+  async AddCust() {
 
-   
+
     const customer_data = {
 
-     Address : this.state.Address,
+      Address: this.state.Address,
       PackageID: this.state.PackageID,
       FullName: this.state.CustName,
       PhoneNum: this.state.CustPNum,
 
 
     }
-    console.log(customer_data);
+    
 
     fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Customers', {
       method: 'POST',
@@ -101,17 +103,78 @@ export default class CCSenderForm extends Component {
 
   }
 
-  async getData ()  {
-    try {
-       jsonValue = await AsyncStorage.getItem('UserId')
+   UpdateLocker(){
 
-     jsonValue != null ?  UserDetails = JSON.parse(jsonValue) : null;
-     this.setState({UserId:UserDetails.UserId})
-     
-    } catch(e) {
+          const Slocker_update = {
+
+        LockerID: this.state.SEmptyLocker[0]["LockerID"],
+        PackageID: this.state.PackageID
+
+      }
+
+
+
+      fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Lockers', {
+        method: 'PUT',
+        body: JSON.stringify(Slocker_update),
+        headers: new Headers({
+          'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+        })
+      })
+
+      const Elocker_update = {
+
+        LockerID: this.state.EEmptyLocker[0]["LockerID"],
+        PackageID: this.state.PackageID
+
+      }
+
+
+
+      fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Lockers', {
+        method: 'PUT',
+        body: JSON.stringify(Elocker_update),
+        headers: new Headers({
+          'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+        })
+      })
+
+
+  }
+
+  async getData() {
+    try {
+      jsonValue = await AsyncStorage.getItem('UserId')
+
+      jsonValue != null ? UserDetails = JSON.parse(jsonValue) : null;
+      this.setState({ UserId: UserDetails.UserId })
+
+    } catch (e) {
       alert('Error get Item')
       // error reading value
     }
+  }
+
+  storeData = async (key,value) => {
+       
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem(key, jsonValue);
+      console.log(key+": "+jsonValue);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  GetStationName  () {
+
+    this.state.StationsList.map((stations, key) => {
+
+      if (stations.StationID === this.state.selected1) {
+        this.storeData('StationName' , stations.StationName)
+      }
+    })
+    
   }
 
   async addPack() {
@@ -124,7 +187,9 @@ export default class CCSenderForm extends Component {
     const response1 = await fetch(apiLockersUrl1);
     const Start = await response1.json()
     this.setState({ SEmptyLocker: Start })
-    console.log(this.state.SEmptyLocker)
+    
+
+    
 
     let EndStation = this.state.selected2;
     const apiLockersUrl = 'http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Lockers?StationID=' + EndStation;
@@ -132,76 +197,78 @@ export default class CCSenderForm extends Component {
     const End = await response.json()
 
     this.setState({ EEmptyLocker: End })
-    console.log(this.state.EEmptyLocker)
 
     
-   if (this.state.EEmptyLocker !== null && this.state.SEmptyLocker !== null) {
- 
+   
+
+    
+
+    if (this.state.EEmptyLocker !== null && this.state.SEmptyLocker !== null) {
+
       const package_data = {
 
         StartStation: this.state.selected1,
         EndStation: this.state.selected2,
         Pweight: this.state.selected3,
-        UserId : this.state.UserId,
+        UserId: this.state.UserId,
         Status: 1
 
 
       }
 
-     fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages', {
+
+      fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages', {
         method: 'POST',
         body: JSON.stringify(package_data),
         headers: new Headers({
           'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
         })
-      }) 
-
-
-  const apiLockersUrl = 'http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages?UserID='+ this.state.UserId;
-  const response = await fetch(apiLockersUrl);
-  const ID = await response.json()
-  this.setState({ PackageID: ID[0]["PackageId"]})
- 
- 
-     const Slocker_update ={
-
-      LockerID:this.state.SEmptyLocker[0]["LockerID"],
-    PackageID:this.state.PackageID
-
-     }
-
-     
-      
-      fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Lockers', {
-        method: 'PUT',
-        body: JSON.stringify(Slocker_update),
-        headers: new Headers({
-          'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
-        })
       })
-
-      const Elocker_update ={
-
-        LockerID:this.state.EEmptyLocker[0]["LockerID"],
-      PackageID:this.state.PackageID
-  
-       }
-
-      
-
-       fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Lockers', {
-        method: 'PUT',
-        body: JSON.stringify(Elocker_update),
-        headers: new Headers({
-          'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+        .then(res => {
+         
+          
+          return res.json()
         })
-      })
+        .then(
+          (result) => {
+            
+            this.setState({ PackageID: result })
+           
+            this.AddCust()
+            this.UpdateLocker()
+            this.storeData('PackageID',result)
+            this.GetStationName()
+            this.storeData('LockerID',this.state.SEmptyLocker[0]["LockerID"])
+            this.props.navigation.navigate('CCLockers');
+          },
+          (error) => {
+            console.log("err post=", error);
+          }).then(
+            
 
 
-    
+          );
 
-   
-this.AddCust() 
+
+
+
+
+      //  fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages', {
+      //     method: 'POST',
+      //     body: JSON.stringify(package_data),
+      //     headers: new Headers({
+      //       'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+      //     })
+      //   }) 
+
+
+      // const apiLockersUrl = 'http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages?UserID='+ this.state.UserId;
+      // const response = await fetch(apiLockersUrl);
+      // const ID = await response.json()
+      // this.setState({ PackageID: ID[0]["PackageId"]})
+
+
+
 
 
     }
@@ -213,7 +280,7 @@ this.AddCust()
         StartStation: this.state.selected1,
         EndStation: this.state.selected2,
         Pweight: this.state.selected3,
-        UserId: this.state.UserId ,
+        UserId: this.state.UserId,
         Status: 0
 
 
@@ -226,10 +293,33 @@ this.AddCust()
           'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
         })
       })
+        .then(res => {
+         
+          
+          return res.json()
+        })
+        .then(
+          (result) => {
+            
+            this.setState({ PackageID: result })
+           
+            this.AddCust()
+            this.props.navigation.navigate('CCLockers');
+         
+          },
+          (error) => {
+            console.log("err post=", error);
+          }).then(
+            
+
+
+          );
 
     }
+
     
-    this.props.navigation.navigate('CCLockers');
+
+  
 
   }
 
@@ -258,9 +348,8 @@ this.AddCust()
                     placeholderStyle={{ color: "#bfc6ea" }}
                     placeholderIconColor="#007aff"
                     selectedValue={this.state.selected1}
-                    onValueChange={this.onValueChange1.bind(this)}
+                    onValueChange={this.onValueChange1.bind(this) }
                   >
-
                     <Picker.Item label='בחר תחנת מוצא' value='None' />
                     {stations}
                   </Picker>
@@ -268,6 +357,7 @@ this.AddCust()
               </View>
 
               <View style={styles.section}>
+                <Text> {this.state.SStationName}</Text>
                 <Icon name="flag" style={{ alignSelf: 'center', marginTop: 10 }} />
                 <Text style={styles.titles}>תחנת יעד</Text>
                 <Item picker style={styles.InputText}>
