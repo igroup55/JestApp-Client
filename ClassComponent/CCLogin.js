@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { Image, Linking, Text, TouchableOpacity, TextInput, StyleSheet, View, Button, navigate, navigation } from 'react-native'
+import { Image, Linking, Text, TouchableOpacity, TextInput, StyleSheet, View, navigate, navigation } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import {Button, Icon } from 'native-base';
 export default class CCLogin extends Component {
     state = {
         email: '',
@@ -15,6 +15,7 @@ export default class CCLogin extends Component {
           const jsonValue = JSON.stringify(value);
           await AsyncStorage.setItem(key, jsonValue);
           console.log(key+": "+jsonValue);
+         
         } catch (e) {
           console.log(e);
         }
@@ -22,12 +23,15 @@ export default class CCLogin extends Component {
       
 
 
-    loginuser = () => {
+    loginuser  ()  {
+
+      
+
         console.log(this.state.Users);
         this.state.Users.map((user) => {
             console.log(user);
         
-            if (this.state.email === user.EmailAddress && this.state.password === user.Password) {
+            if (this.state.email == user.EmailAddress && this.state.password == user.Password) {
                 {this.storeData('UserId',user)}
                 this.props.navigation.navigate('Home');
                
@@ -50,8 +54,8 @@ export default class CCLogin extends Component {
         const response = await fetch(apiUserUrl);
         const data = await response.json()
         this.setState({ Users: data, });
-        console.log(this.state.Users[0].EmailAddress);
-        this.loginuser();
+        console.log(email,password)
+        {this.loginuser()}
     }
 
     goToForgotPassword = () => this.props.navigation.navigate('ForgotPassword')
@@ -91,9 +95,7 @@ export default class CCLogin extends Component {
 
 
 
-                <TouchableOpacity onPress={() => { this.login(this.state.email, this.state.password) }} style={styles.submitButton}>
-                    <Text style={styles.submitButtonText}> Sign In </Text>
-                </TouchableOpacity>
+                <Button onPress={() => { this.login(this.state.email, this.state.password) }} style={styles.submitButton}><Text style={styles.submitButtonText}> Sign In </Text></Button>
 
                 <View style={{ flexDirection: 'row-reverse' }}>
                     <Text style={{ color: 'blue' }}
@@ -132,17 +134,19 @@ const styles = StyleSheet.create({
     },
     submitButton: {
         backgroundColor: 'green',
-        padding: 15,
-        margin: 15,
+     
         height: 55,
         width: 150,
         borderRadius: 10,
         alignSelf: 'center',
-        marginBottom: 30
+        marginBottom: 30,
+       
+        
     },
     submitButtonText: {
         color: 'white',
         textAlign: 'center',
         fontSize: 18,
+
     }
 })

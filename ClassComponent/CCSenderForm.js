@@ -18,8 +18,8 @@ export default class CCSenderForm extends Component {
       StationsList: [],
       CustPNum: ' ',
       CustName: ' ',
-SStationName: '' ,
-EStationName: '' ,
+      SStationName: '',
+      EStationName: '',
       PackageID: null,
       SEmptyLocker: null,
       EEmptyLocker: null,
@@ -49,7 +49,7 @@ EStationName: '' ,
     const apiStationsUrl = 'http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Stations';
     const response = await fetch(apiStationsUrl);
     const data = await response.json()
-    
+
     this.setState({ StationsList: data })
 
 
@@ -60,7 +60,7 @@ EStationName: '' ,
     this.setState({
       selected1: value
     });
- 
+
   }
 
   onValueChange2 = (value) => {
@@ -90,7 +90,7 @@ EStationName: '' ,
 
 
     }
-    
+
 
     fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Customers', {
       method: 'POST',
@@ -103,41 +103,43 @@ EStationName: '' ,
 
   }
 
-   UpdateLocker(){
+  UpdateLocker() {
 
-          const Slocker_update = {
+    const Slocker_update = {
 
-        LockerID: this.state.SEmptyLocker[0]["LockerID"],
-        PackageID: this.state.PackageID
+      LockerID: this.state.SEmptyLocker[0]["LockerID"],
+      PackageID: null,
+      Busy: 1
 
-      }
+    }
 
 
 
-      fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Lockers', {
-        method: 'PUT',
-        body: JSON.stringify(Slocker_update),
-        headers: new Headers({
-          'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
-        })
+    fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Lockers', {
+      method: 'PUT',
+      body: JSON.stringify(Slocker_update),
+      headers: new Headers({
+        'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
       })
+    })
 
-      const Elocker_update = {
+    const Elocker_update = {
 
-        LockerID: this.state.EEmptyLocker[0]["LockerID"],
-        PackageID: this.state.PackageID
+      LockerID: this.state.EEmptyLocker[0]["LockerID"],
+      PackageID: null,
+      Busy: 1
 
-      }
+    }
 
 
 
-      fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Lockers', {
-        method: 'PUT',
-        body: JSON.stringify(Elocker_update),
-        headers: new Headers({
-          'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
-        })
+    fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Lockers', {
+      method: 'PUT',
+      body: JSON.stringify(Elocker_update),
+      headers: new Headers({
+        'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
       })
+    })
 
 
   }
@@ -155,26 +157,26 @@ EStationName: '' ,
     }
   }
 
-  storeData = async (key,value) => {
-       
+  storeData = async (key, value) => {
+
     try {
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem(key, jsonValue);
-      console.log(key+": "+jsonValue);
+      console.log(key + ": " + jsonValue);
     } catch (e) {
       console.log(e);
     }
   };
 
-  GetStationName  () {
+  GetStationName() {
 
     this.state.StationsList.map((stations, key) => {
 
       if (stations.StationID === this.state.selected1) {
-        this.storeData('StationName' , stations.StationName)
+        this.storeData('StationName', stations.StationName)
       }
     })
-    
+
   }
 
   async addPack() {
@@ -187,9 +189,9 @@ EStationName: '' ,
     const response1 = await fetch(apiLockersUrl1);
     const Start = await response1.json()
     this.setState({ SEmptyLocker: Start })
-    
 
-    
+
+
 
     let EndStation = this.state.selected2;
     const apiLockersUrl = 'http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Lockers?StationID=' + EndStation;
@@ -198,10 +200,10 @@ EStationName: '' ,
 
     this.setState({ EEmptyLocker: End })
 
-    
-   
 
-    
+
+
+
 
     if (this.state.EEmptyLocker !== null && this.state.SEmptyLocker !== null) {
 
@@ -225,26 +227,27 @@ EStationName: '' ,
         })
       })
         .then(res => {
-         
-          
+
+
           return res.json()
         })
         .then(
           (result) => {
-            
+
             this.setState({ PackageID: result })
-           
+
             this.AddCust()
             this.UpdateLocker()
-            this.storeData('PackageID',result)
+            this.storeData('PackageID', result)
             this.GetStationName()
-            this.storeData('LockerID',this.state.SEmptyLocker[0]["LockerID"])
+            this.storeData('SLockerID', this.state.SEmptyLocker[0]["LockerID"])
+            this.storeData('ELockerID', this.state.EEmptyLocker[0]["LockerID"])
             this.props.navigation.navigate('CCLockers');
           },
           (error) => {
             console.log("err post=", error);
           }).then(
-            
+
 
 
           );
@@ -294,34 +297,22 @@ EStationName: '' ,
         })
       })
         .then(res => {
-         
-          
+
           return res.json()
         })
         .then(
           (result) => {
-            
+
             this.setState({ PackageID: result })
-           
+
             this.AddCust()
             this.props.navigation.navigate('CCLockers');
-         
+
           },
           (error) => {
             console.log("err post=", error);
           }).then(
-            
-
-
-          );
-
-    }
-
-    
-
-  
-
-  }
+           );}}
 
   render() {
 
@@ -348,7 +339,7 @@ EStationName: '' ,
                     placeholderStyle={{ color: "#bfc6ea" }}
                     placeholderIconColor="#007aff"
                     selectedValue={this.state.selected1}
-                    onValueChange={this.onValueChange1.bind(this) }
+                    onValueChange={this.onValueChange1.bind(this)}
                   >
                     <Picker.Item label='בחר תחנת מוצא' value='None' />
                     {stations}

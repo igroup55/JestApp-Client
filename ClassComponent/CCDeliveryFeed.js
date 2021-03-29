@@ -89,6 +89,8 @@ const App = () => {
       <View style={styles.container}>
         <View style={{ flexDirection: 'row', padding: 10, backgroundColor: 'green', borderBottomWidth: 2 }}>
           <Text style={styles.titleText}>JestApp</Text>
+
+          <Text> </Text>
           {/* <TouchableOpacity onPress={() => setMultiSelect(!multiSelect)}>
             <Text
               style={{

@@ -40,7 +40,7 @@ export default class Home extends Component {
     <View>
     <Button style={{width:50,justifyContent:'center',alignItems:'center'}}
           title='שליח רכבת'
-          onPress={() => { this.props.navigation.navigate('NewTrainRoute');}}
+          onPress={() => { this.props.navigation.navigate('TrainSelection');}}
 
           
           
