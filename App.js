@@ -25,7 +25,7 @@ export default function App() {
 
 <NavigationContainer>
 
-<Stack.Navigator initialRouteName="Login">
+<Stack.Navigator initialRouteName="Login" screenOptions={{headerStyle:{backgroundColor:'#A7D489',},headerTintColor:'#fff'}}>
 <Stack.Screen name="Login" component={CCLogin}/>
 <Stack.Screen name="DeliveryFeed" component={CCDeliveryFeed1} />
 <Stack.Screen name="NewDelivery" component={CCSenderForm} />
