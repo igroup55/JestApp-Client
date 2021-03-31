@@ -20,7 +20,6 @@ export default class CCLockers extends Component {
   }
 
   async componentDidMount() {
-
     this.getMultiple()
     this.getData()
   }
@@ -40,7 +39,6 @@ export default class CCLockers extends Component {
 
   async getMultiple() {
 
-
     try {
 
       let values = await AsyncStorage.multiGet(['PackageID', 'SLockerID', 'StationName', 'ELockerID'])
@@ -50,15 +48,9 @@ export default class CCLockers extends Component {
       // read error
     }
 
-
-
-    // example console.log output:
-    // [ ['@MyApp_user', 'myUserValue'], ['@MyApp_key', 'myKeyValue'] ]
   }
 
   PackDeposit() {
-
-   
 
     const Slocker_update = {
 
@@ -68,7 +60,6 @@ export default class CCLockers extends Component {
 
 
     }
-
 
     fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Lockers', {
       method: 'PUT',
@@ -86,8 +77,6 @@ export default class CCLockers extends Component {
 
     }
 
-
-
     fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Lockers', {
       method: 'PUT',
       body: JSON.stringify(Elocker_update),
@@ -97,8 +86,6 @@ export default class CCLockers extends Component {
     })
 
     {this.UpdatePackageStatus()}
-
-
 
   }
 

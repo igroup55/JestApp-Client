@@ -12,6 +12,7 @@ import CCRegister from './ClassComponent/CCRegister';
 import CCHome from './ClassComponent/CCHome';
 import HomeActivityList from './ClassComponent/HomeActivityList';
 import CCLockers from './ClassComponent/CCLockers';
+import CCTDLockers from './ClassComponent/CCTDLockers';
 import CCDeliveryExpressFeed from './ClassComponent/CCDeliveryExpressFeed';
 import CCTrainRouteSelection from './ClassComponent/CCTrainRouteSelection';
 import CCExpressRouteSelection from './ClassComponent/CCExpressRouteSelection';
@@ -37,6 +38,7 @@ export default function App() {
 <Stack.Screen name="NewTrainRoute" component={CCTrainRouteSelection} />
 <Stack.Screen name="NewExpressRoute" component={CCExpressRouteSelection} />
 <Stack.Screen name="TrainSelection" component={CCTrainSelection} />
+<Stack.Screen name="TDLockers" component={CCTDLockers} />
 
 </Stack.Navigator>
 
