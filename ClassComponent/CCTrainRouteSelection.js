@@ -4,7 +4,6 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import CheckBoxes from './CCCheckBox';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import DatePicker from 'react-native-datepicker'
-import { ActivityIndicator } from 'react-native';
 
 
 
@@ -13,12 +12,11 @@ export default class CCTrainRouteSelection extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      StartStation: null,
-      EndStation: null,
+      selected1: null,
+      selected2: null,
+      selected3: null,
       date:new Date(),
-       StationsList : [],
-       PackagesList:[],
-       isLoading:0
+       StationsList : []
     };
     
   }
@@ -26,9 +24,8 @@ export default class CCTrainRouteSelection extends Component {
     this.setState({ chosenDate: newDate });
   }
 async componentDidMount () {
- ////tar2 - url צריך לשנות אחרי שמעדכנים ל tar 1
-
-   const apiStationsUrl ='http://proj.ruppin.ac.il/igroup55/test2/tar2/api/Stations';
+ 
+   const apiStationsUrl ='http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Stations';
    const response = await fetch(apiStationsUrl);
    const data = await response.json()
    this.setState({StationsList:data,})
@@ -36,37 +33,29 @@ async componentDidMount () {
 };
   onValueChange1 = (value) => {
     this.setState({
-      StartStation: value
+      selected1: value
     });
-    console.log(this.state.StartStation);
+    console.log(this.state.selected1);
 
   }
   onValueChange2 = (value) => {
     this.setState({
-      EndStation: value
+      selected2: value
     });
-    console.log(this.state.EndStation);
+    console.log(this.state.selected2);
 
   }
-  
- async CheckForPackages(StartStation,EndStation)
- {
-  this.setState({isLoading:1,});
-  console.log(this.state.isLoading)
-  //tar2 - url צריך לשנות אחרי שמעדכנים ל tar 1
-  const apiUserUrl = 'http://proj.ruppin.ac.il/igroup55/test2/tar2/api/Packages?startStation='+StartStation+'&endStation='+EndStation;
-  const response = await fetch(apiUserUrl);
-  const data = await response.json()
-  this.setState({ PackagesList: data, });
-  console.log(this.state.PackagesList);
-  this.setState({isLoading:0});
-  this.navigate();
-  
+  onValueChange3 = (value) => {
+    this.setState({
+      selected3: value
+    });
+    console.log(this.state.selected3);
   }
+
 
    navigate = () => {
 
-    this.props.navigation.navigate('DeliveryFeed',{Packages:this.state.PackagesList});
+    this.props.navigation.navigate('DeliveryFeed')
 
 
 } 
@@ -94,7 +83,7 @@ async componentDidMount () {
                     placeholder="בחר תחנת מוצא"
                     placeholderStyle={{ color: "#bfc6ea" }}
                     placeholderIconColor="#007aff"
-                    selectedValue={this.state.StartStation}
+                    selectedValue={this.state.selected1}
                     onValueChange={this.onValueChange1.bind(this)}
                   >
 
@@ -117,7 +106,7 @@ async componentDidMount () {
                     placeholder="בחר תחנת יעד"
                     placeholderStyle={{ color: "#bfc6ea" }}
                     placeholderIconColor="#007aff"
-                    selectedValue={this.state.EndStation}
+                    selectedValue={this.state.selected2}
                     onValueChange={this.onValueChange2.bind(this)}
                   >
                     <Picker.Item label="בחר תחנת יעד" value="key0" />
@@ -156,15 +145,10 @@ async componentDidMount () {
         onDateChange={(date) => {this.setState({date: date}) }}
       /> */}
 
-              <Button onPress = {()=>{this.CheckForPackages(this.state.StartStation,this.state.EndStation);}} style={{ alignSelf: 'center', backgroundColor: 'green', marginTop: 70, borderRadius: 10, borderWidth: 1, borderColor: 'black' }}><Text style={{ fontWeight: 'bold' }}>  חפש משלוחים </Text></Button>
+              <Button onPress = {this.navigate} style={{ alignSelf: 'center', backgroundColor: 'green', marginTop: 70, borderRadius: 10, borderWidth: 1, borderColor: 'black' }}><Text style={{ fontWeight: 'bold' }}>  חפש משלוחים </Text></Button>
 
             </Form>
-            
-          <View> 
-            {this.state.isLoading === 1?( <ActivityIndicator size="large" color="#A7D489" />):null}       
-         
-   
-          </View>
+
 
 
           </View>

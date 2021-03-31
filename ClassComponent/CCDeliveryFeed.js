@@ -16,11 +16,10 @@ import {
   Platform,
 } from 'react-native';
 
-
 const ExpandableComponent = ({ item, onClickFunction }) => {
   //Custom Component for the Expandable List
   const [layoutHeight, setLayoutHeight] = useState(0);
-  
+
   useEffect(() => {
     if (item.isExpanded) {
       setLayoutHeight(null);
