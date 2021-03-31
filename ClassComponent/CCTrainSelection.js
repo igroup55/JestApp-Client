@@ -61,7 +61,8 @@ async componentDidMount () {
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem(key, jsonValue);
       console.log(key+": "+jsonValue);
-    } catch (e) {
+    } 
+    catch (e) {
       console.log(e);
     }
   };
