@@ -23,7 +23,8 @@ export default class CCLockers extends Component {
       UserId: null,
       DeliveryID: null,
       Pressed: false,
-      ButtonStyle:null
+      ButtonStyle:null,
+      PackagesList:[]
     }
   }
 
@@ -53,7 +54,7 @@ export default class CCLockers extends Component {
     const apiTDUserUrl = 'http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages?startStation=' + this.state.StartStation + '&endStation=' + this.state.EndStation + '&Pweight=' + this.state.Pweight;
     const response = await fetch(apiTDUserUrl);
     const TDArrivaldata = await response.json()
-
+    this.setState({PackagesList:TDArrivaldata})
     this.setState({ PackageID: TDArrivaldata[0]["PackageId"], StartStation: TDArrivaldata[0]["StartStation"], EndStation: TDArrivaldata[0]["EndStation"] })
 
     const apiGetLocker = 'http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Lockers/{PackageID}?PackageID=' + this.state.PackageID;
@@ -93,6 +94,8 @@ export default class CCLockers extends Component {
 
   PickUp() {
     this.setState({ Pressed: !this.state.Pressed })
+
+
     const Slocker_update = {
 
       LockerID: this.state.SLockerID,
@@ -158,26 +161,99 @@ export default class CCLockers extends Component {
 
   UpdateTDUserPack() {
 
+
+
     const TDPackage_update = {
 
 
       PackageID: this.state.PackageID,
       DeliveryID: this.state.DeliveryID,
       Status:1
-
+  
     }
 
+ 
+  
     fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/TDUser', {
       method: 'PUT',
       body: JSON.stringify(TDPackage_update),
       headers: new Headers({
         'Content-type': 'application/json; charset=UTF-8'
-
+  
       })
     })
-  };
+
+ if(this.state.PackagesList.length === 1){
+
+  const TD1Package_update = {
+    EndStation:this.state.EndStation,
+    StartStation:this.state.StartStation,
+    Pweight:this.state.Pweight,
+    Status:-1
+
+  }
+
+  fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/TDUser', {
+    method: 'PUT',
+    body: JSON.stringify(TD1Package_update),
+    headers: new Headers({
+      'Content-type': 'application/json; charset=UTF-8'
+
+    })
+  })
+ }
+ else{
+  const TD1Package_update = {
+    EndStation:this.state.EndStation,
+    StartStation:this.state.StartStation,
+    Pweight:this.state.Pweight,
+    Status:0
+
+  }
+
+  fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/TDUser', {
+    method: 'PUT',
+    body: JSON.stringify(TD1Package_update),
+    headers: new Headers({
+      'Content-type': 'application/json; charset=UTF-8'
+
+    })
+  })
+
+
+ }
+  
+    
+  
+  
+
+  }
+  
+
+   
+ 
 
    Deposit () {
+
+    //this.setState({ Pressed: !this.state.Pressed })
+
+    const UpdateRating = {
+      StartStation: this.state.StartStation,
+      EndStation: this.state.EndStation ,
+      Pweight: this.state.Pweight,
+      UserID: this.state.UserId ,
+      
+          }
+      
+      
+          fetch('http://proj.ruppin.ac.il/igroup55/test2/tar1/api/TDUser/{Rating}', {
+            method: 'PUT',
+            body: JSON.stringify(UpdateRating),
+            headers: new Headers({
+              'Content-type': 'application/json; charset=UTF-8'
+        
+            })
+          })
 
     const Package_update = {
 
@@ -194,6 +270,8 @@ export default class CCLockers extends Component {
         'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
       })
     })
+
+    alert('החבילה הופקדה בהצלחה')
 
   }
 
@@ -259,7 +337,7 @@ export default class CCLockers extends Component {
   render() {
 
     if (this.state.Pressed === true) {
-     button =  <Button  onPress={() => { this.Deposit() }}  block success style={{ marginRight: 90, marginLeft: 90, marginBottom: 15, marginTop: 20, borderColor: 'black', borderWidth: 2, borderRadius: 8 }} >
+    var button =  <Button  onPress={() => { this.Deposit() }}  block success style={{ marginRight: 90, marginLeft: 90, marginBottom: 15, marginTop: 20, borderColor: 'black', borderWidth: 2, borderRadius: 8 }} >
         <Text style={{ fontWeight: 'bold' }}>הפקד חבילה</Text>
       </Button>
      
@@ -267,7 +345,7 @@ export default class CCLockers extends Component {
     }
     else {
 
-     button =  <Button onPress={() => { this.PickUp() }} block danger style={{ marginRight: 90, marginLeft: 90, marginBottom: 15, marginTop: 20, borderColor: 'black', borderWidth: 2, borderRadius: 8 }} >
+    var button =  <Button onPress={() => { this.PickUp() }} block danger style={{ marginRight: 90, marginLeft: 90, marginBottom: 15, marginTop: 20, borderColor: 'black', borderWidth: 2, borderRadius: 8 }} >
         <Text style={{ fontWeight: 'bold' }}>איסוף חבילה</Text>
       </Button>
      
@@ -293,7 +371,8 @@ export default class CCLockers extends Component {
         </View>
         <Text style={styles.titles} >- נא לגשת ללוקר מס' {this.state.SLockerID} לאיסוף -</Text>
 
-             <View>{button}</View>
+             {button}
+
         {/* <Button onPress={()=>{this.CancelPackage()}} block danger style={{ marginRight: 40 ,marginLeft:40, borderColor: 'black', borderWidth: 2, borderRadius: 8 }} >
           <Text style={{ fontWeight: 'bold' }}>ביטול משלוח</Text>
         </Button> */}

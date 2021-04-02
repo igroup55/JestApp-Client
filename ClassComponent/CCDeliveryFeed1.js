@@ -1,7 +1,7 @@
 
 import * as React from 'react';
 import { List, Checkbox, Button } from 'react-native-paper';
-import { SafeAreaView, ScrollView, StyleSheet, TextInput, Text, View }  from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, TextInput, Text, View  }  from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -22,7 +22,12 @@ class CCDeliveryFeed1 extends React.Component {
     TDUserList2: [],
     TDUserList3: [],
     TDUserList: [],
-    Pweight:null
+    Pweight:null,
+    Rating3: 100,
+    Rating6: 100,
+    Rating10:100,
+    RatingSum:0
+   
   }
 
   _handlePress = () =>
@@ -37,7 +42,7 @@ class CCDeliveryFeed1 extends React.Component {
 
     this.setState({ StartStation: values[0][1], EndStation: values[1][1], SStationName: values[2][1], EStationName: values[3][1] })
 
-
+     
   }
 
   async getData() {
@@ -76,13 +81,16 @@ class CCDeliveryFeed1 extends React.Component {
 
       alert('קטגוריה סומנה בהצלחה !! '  +' לחץ - אני כאן - בעת ההגעה לתחנת רכבת ')
 
+
+      
       const TDUsers_data = {
 
         UserID: this.state.UserDetail,
         Pweight: weight,
         Status: 0,
         StartStation: this.state.StartStation,
-        EndStation: this.state.EndStation
+        EndStation: this.state.EndStation,
+        Rating: this.state.Rating
 
       }
 
@@ -114,14 +122,39 @@ class CCDeliveryFeed1 extends React.Component {
 
     }
 
+
+
+
   async Interested(weight) {
-    
+
 this.setState({Pweight:weight})
     const apiTDUserUrl = 'http://proj.ruppin.ac.il/igroup55/test2/tar1/api/TDUser?UserId=' + this.state.UserDetail;
     const response = await fetch(apiTDUserUrl);
     const data = await response.json()
-   
+console.log('Data : '+data)
+    // const GetRating = {
 
+    //   UserID:this.state.UserDetail
+
+    // }
+
+    const GetRatingUrl = 'http://proj.ruppin.ac.il/igroup55/test2/tar1/api/TDUser/{UpdatedRating}/'+this.state.UserDetail;
+    const RatingResponse = await fetch(GetRatingUrl);
+    const GetRating_Data = await RatingResponse.json()
+  
+    if(GetRating_Data[0] === undefined)
+    {
+      this.setState({Rating:5})
+     
+    }
+   
+    else{
+      this.setState({Rating:GetRating_Data[0].Rating})
+      console.log(GetRating_Data[0].Rating)
+    }
+    
+    
+    
     if (data.UserID === 0 ) {
 
       if (weight === 3 )
@@ -144,16 +177,14 @@ this.setState({Pweight:weight})
     }
     else{
       alert('כבר התעניינת בקטגוריה')
+     
 
     }
 
     //   התעניינות--------------------------
     // GET -CHECk if the user is interested in any packages ( the user is limited to 1 till now)
     // POST TO TDUSER ( UserId ,Pweight,Status)
-
   
-
-
     // איסוף------------
     
     //   כפתור איסוף
@@ -164,13 +195,58 @@ this.setState({Pweight:weight})
 
   }
 
+  ChanceToPickup(){
+
+    if(this.state.TDUserList.length !== 0)
+    {
+      let RatingSum = 0;
+      this.state.TDUserList.map((interest, key) => {
+    
+        RatingSum += interest["Rating"];
+        
+        })
+    
+      let TDRating = RatingSum/this.state.TDUserList.length;
+      
+      if(this.state.TDUserList[0]["Pweight"]===3 && this.state.TDUserList1 !== 0)
+      { let CategoryRating = TDRating * (this.state.PackagesList1.length/this.state.TDUserList1.length)
+        console.log(TDRating +'*'+this.state.PackagesList1.length +'/'+this.state.TDUserList1.length)
+        this.setState({Rating3:CategoryRating*10})
+      }
+     
+      if(this.state.TDUserList[0]["Pweight"]===6  && this.state.TDUserList2 !== 0)
+      {
+        let CategoryRating = TDRating * (this.state.PackagesList2.length/this.state.TDUserList2.length)
+        console.log(TDRating +'*'+this.state.PackagesList2.length +'/'+this.state.TDUserList2.length)
+      this.setState({Rating6:CategoryRating*10})
+      }
+      
+      if(this.state.TDUserList[0]["Pweight"]===10  && this.state.TDUserList3 !== 0)
+      { 
+        let CategoryRating = TDRating * (this.state.PackagesList3.length/this.state.TDUserList3.length)
+        this.setState({Rating10:CategoryRating*10})
+      }
+      
+    
+      
+    
+    }
+
+
+  }
+
   async GetTDUser(weight){
-console.log()
+
     const apiUserUrl = 'http://proj.ruppin.ac.il/igroup55/test2/tar1/api/TDUser?startStation=' + this.state.StartStation + '&endStation=' + this.state.EndStation + '&Pweight=' + weight;
     const response = await fetch(apiUserUrl);
     const TDdata = await response.json()
+
     this.setState({TDUserList: TDdata })
-    console.log(this.state.TDUserList)
+  
+
+
+
+  
 
     if (weight === 3)
     this.setState({ TDUserList1: [] });
@@ -201,6 +277,8 @@ console.log()
   
       );
     }
+
+    {this.ChanceToPickup()}
     
   
    
@@ -211,7 +289,8 @@ console.log()
   async getpackages(weight) {
 
 let Pweight = weight
-    {this.GetTDUser(Pweight)}
+   
+    
     //tar2 - url צריך לשנות אחרי שמעדכנים ל tar 1
     const apiUserUrl = 'http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages?startStation=' + this.state.StartStation + '&endStation=' + this.state.EndStation + '&Pweight=' + weight;
     const response = await fetch(apiUserUrl);
@@ -255,22 +334,41 @@ let Pweight = weight
 console.log(this.state.PackagesList3)
 
     this.setState({ expanded: !this.state.expanded })
-
+    {this.GetTDUser(Pweight)}
   }
 
-  CheckInserests() {
+  async CheckInserests() {
+
+    const PossiblePickupUrl = 'http://proj.ruppin.ac.il/igroup55/test2/tar1/api/TDUser?StartStation='+this.state.StartStation+'&EndStation='+this.state.EndStation+'&UserId='+this.state.UserDetail ;
+    const responseIfPossible = await fetch(PossiblePickupUrl);
+    const IsInterested = await responseIfPossible.json()
+
+    const PackagesFoundUrl = 'http://proj.ruppin.ac.il/igroup55/test2/tar1/api/Packages?startStation=' + this.state.StartStation + '&endStation=' + this.state.EndStation + '&Pweight= -1';
+    const response = await fetch(PackagesFoundUrl);
+    const data = await response.json()
+    console.log(data)
+
+    if(data.length !== 0)
+    {
+      if (IsInterested === 0) {
+
+        alert('אינך מתעניין בחבילה במסלול זה')
+        
+      }
+      else{
+      
+        this.props.navigation.navigate('TDLockers')
+      
+      }
+
+    }
+    else{
+
+      alert('אין חבילות במסלול שנבחר')
+    }
 
 
-if (condition) {
 
-
-  alert('No Packages Found')
-  
-}
-else{
-
-  this.props.navigation.navigate('TDLockers')
-}
     
 
     
@@ -280,10 +378,11 @@ else{
 
 
     return (
-      <List.Section title={this.state.SStationName + '    --->   ' + this.state.EStationName} titleStyle={{ fontSize: 20, textAlign: 'center', }}  >
+      <ScrollView>
+      <List.Section title={this.state.SStationName + '    ---->   ' + this.state.EStationName} titleStyle={{ fontSize: 15, textAlign: 'center', }}  >
         <List.Accordion
           title=' חבילות עד 3 ק"ג'
-          left={props => <List.Icon {...props} icon="folder" />}
+          left={props => <List.Icon {...props} icon="cube" />}
           titleStyle={styles.AccordionTitle}
           onPress={() => { this.getpackages(3.0) }}
           style={styles.AccordionList}
@@ -292,23 +391,26 @@ else{
 
           <List.Item titleStyle={styles.ItemTitle} title={'חבילות זמינות :' + this.state.PackagesList1.length} />
           <List.Item titleStyle={styles.ItemTitle} title={ 'מתעניינים : '+ this.state.TDUserList1.length} />
+          <List.Item titleStyle={styles.ItemTitle} title={ 'הסיכוי לאסוף חבילה : '+' % '+ this.state.Rating3} />
+
           <Button onPress={() => { this.Interested(3) }} style={styles.AccordionButton}><Text style={styles.ButtonText}>סמן קטגוריה</Text></Button>
         </List.Accordion>
 
         <List.Accordion
           title=' חבילות בין 3 ל 6 ק"ג'
-          left={props => <List.Icon {...props} icon="folder" />}
+          left={props => <List.Icon {...props} icon="cube" />}
           style={styles.AccordionList}
           onPress={() => { this.getpackages(6.0) }}
           titleStyle={styles.AccordionTitle}
         >
           <List.Item titleStyle={styles.ItemTitle} title={'חבילות זמינות :' + this.state.PackagesList2.length} />
           <List.Item titleStyle={styles.ItemTitle} title={ 'מתעניינים : ' + this.state.TDUserList2.length } />
+          <List.Item titleStyle={styles.ItemTitle} title={ 'הסיכוי לאסוף חבילה : '+' % '+ this.state.Rating6} />
           <Button onPress={() => { this.Interested(6) }} style={styles.AccordionButton}><Text style={styles.ButtonText}>סמן קטגוריה</Text></Button>
         </List.Accordion>
         <List.Accordion
           title=' חבילות בין 6 ל 10 ק"ג'
-          left={props => <List.Icon {...props} icon="folder" />}
+          left={props => <List.Icon {...props} icon="cube" />}
           onPress={() => { this.getpackages(10.0) }}
           titleStyle={styles.AccordionTitle}
           style={styles.AccordionList}
@@ -316,13 +418,14 @@ else{
         >
           <List.Item titleStyle={styles.ItemTitle} title={'חבילות זמינות :' + this.state.PackagesList3.length} />
           <List.Item titleStyle={styles.ItemTitle} title={ 'מתעניינים : ' + this.state.TDUserList3.length } />
+          <List.Item titleStyle={styles.ItemTitle} title={ 'הסיכוי לאסוף חבילה : '+' % '+ this.state.Rating10} />
           <Button onPress={() => { this.Interested(10) }} style={styles.AccordionButton}><Text style={styles.ButtonText}>סמן קטגוריה</Text></Button>
         </List.Accordion>
 
-        <Button onPress={() => {  this.CheckInserests() }} style={{ alignSelf: 'center', backgroundColor: 'green', marginTop: 70, borderRadius: 10, borderWidth: 1, borderColor: 'black' }}><Text style={{ fontWeight: 'bold' }}>  אני כאן  </Text></Button>
+        <Button onPress={() => {  this.CheckInserests() }} style={{ alignSelf: 'center', backgroundColor: 'green', marginTop: 50, borderRadius: 7, borderWidth: 1, borderColor: 'black' }}><Text style={{ fontWeight: 'bold' , color:'black' }}>  אני כאן  </Text></Button>
 
       </List.Section>
-
+      </ScrollView>
     
     );
 
@@ -347,7 +450,7 @@ const styles = ({
 
   },
   ItemTitle: {
-
+fontWeight:'bold'
   },
   AccordionList: {
     marginBottom: 8,

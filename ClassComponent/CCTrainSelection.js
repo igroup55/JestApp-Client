@@ -104,7 +104,7 @@ this.storeData('EndStation',this.state.EndStation)
       <SafeAreaView>
         <ScrollView>
           <View >
-            <Header style={{ backgroundColor: 'green', borderBottomWidth: 2, borderColor: 'black', borderBottomColor: 'black' }}><Text style={{ fontSize: 30, fontWeight: 'bold', backgroundColor: 'green' }}> JestApp</Text></Header>
+            <Header style={{ backgroundColor: 'green', borderBottomWidth: 2, borderBottomColor: 'black' }}><Text style={{ fontSize: 30, fontWeight: 'bold', backgroundColor: 'green' }}> JestApp</Text></Header>
 
 
             <Form style={{ width: 390 }}>
@@ -152,7 +152,6 @@ this.storeData('EndStation',this.state.EndStation)
 
 
 
-              <Text style={{ alignSelf: 'center', marginTop: 10,fontWeight:'bold' }}>בחר תאריך נסיעה</Text>
               {/* <Icon name="calendar"  style={{ alignSelf: 'center', marginTop: 10 }} /> */}
               
               {/* <DatePicker

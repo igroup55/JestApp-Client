@@ -382,7 +382,7 @@ export default class CCSenderForm extends Component {
                   onChangeText={val => this.setState({ CustName: val })}
                 />
               </Item>
-              <Text>{this.state.CustName}</Text>
+              
               <Item>
                 <Input style={styles.InputText}
                   placeholderTextColor="grey"

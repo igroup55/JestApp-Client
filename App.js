@@ -24,27 +24,107 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
 
-<NavigationContainer>
+    <NavigationContainer>
 
-<Stack.Navigator initialRouteName="Login">
-<Stack.Screen name="Login" component={CCLogin}/>
-<Stack.Screen name="DeliveryFeed" component={CCDeliveryFeed1} />
-<Stack.Screen name="NewDelivery" component={CCSenderForm} />
-<Stack.Screen name="Register" component={CCRegister} />
-<Stack.Screen name="Home" component={CCHome} />
-<Stack.Screen name="HomeActivityList" component={HomeActivityList} />
-<Stack.Screen name="CCLockers" component={CCLockers} />
-<Stack.Screen name="DeliveryExpress" component={CCDeliveryExpressFeed} />
-<Stack.Screen name="NewTrainRoute" component={CCTrainRouteSelection} />
-<Stack.Screen name="NewExpressRoute" component={CCExpressRouteSelection} />
-<Stack.Screen name="TrainSelection" component={CCTrainSelection} />
-<Stack.Screen name="TDLockers" component={CCTDLockers} />
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name="Login" component={CCLogin} options={{
+          title: 'כניסה',
+          headerStyle: {
+          backgroundColor: 'green',
+          },
+          headerTintColor: 'black',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            textAlign:'center'
 
-</Stack.Navigator>
+          }}}/>
+        <Stack.Screen name="DeliveryFeed" component={CCDeliveryFeed1} options={{
+          title: 'בחר קטגוריה של משקל',
+          headerStyle: {
+          backgroundColor: 'green',
+          },
+          headerTintColor: 'black',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            textAlign:'center'
 
-</NavigationContainer>
+          }}} />
+        <Stack.Screen name="NewDelivery" component={CCSenderForm} options={{
+          title: 'משלוח חדש',
+          headerStyle: {
+          backgroundColor: 'green',
+          },
+          headerTintColor: 'black',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            textAlign:'center'
 
-    
+          }}}/>
+        <Stack.Screen name="Register" component={CCRegister} options={{
+          title: 'הרשמה',
+          headerStyle: {
+          backgroundColor: 'green',
+          },
+          headerTintColor: 'black',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            textAlign:'center'
+
+          }}}/>
+        <Stack.Screen name="Home" component={CCHome} options={{
+          title:'',
+          headerStyle: {
+          backgroundColor: 'green',
+          },
+          headerTintColor: 'black',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            textAlign:'center'
+
+          }}}/>
+        <Stack.Screen name="HomeActivityList" component={HomeActivityList} />
+        <Stack.Screen name="CCLockers" component={CCLockers} options={{
+          title: '',
+          headerStyle: {
+          backgroundColor: 'green',
+          },
+          headerTintColor: 'black',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            textAlign:'center'
+
+          }}}/>
+        <Stack.Screen name="DeliveryExpress" component={CCDeliveryExpressFeed} />
+        <Stack.Screen name="NewTrainRoute" component={CCTrainRouteSelection} />
+        <Stack.Screen name="NewExpressRoute" component={CCExpressRouteSelection} />
+        <Stack.Screen name="TrainSelection" component={CCTrainSelection} options={{
+          title: 'בחר מסלול',
+          headerStyle: {
+          backgroundColor: 'green',
+          },
+          headerTintColor: 'black',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            textAlign:'center'
+
+          }}} />
+        <Stack.Screen name="TDLockers" component={CCTDLockers} options={{
+          title: 'בחר קטגוריה של משקל',
+          headerStyle: {
+          backgroundColor: 'green',
+          },
+          headerTintColor: 'black',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            textAlign:'center'
+
+          }}}/>
+
+      </Stack.Navigator>
+
+    </NavigationContainer>
+
+
 
 
   );
